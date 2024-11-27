@@ -14,7 +14,8 @@ const Home = () => {
         <br/>
         <span className="font-bold text-xl text-gray-500">Ledger | E-Commerce | Bills</span>
       </h2>
-      <Button onClick={()=>navigate('/create-bill')}>Get Started. It's Free</Button>
+      <Button onClick={()=>navigate('/create-bill')} 
+        className='my-3'>Get Started. It's Free</Button>
     </div>
   );
 };
