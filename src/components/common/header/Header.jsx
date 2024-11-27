@@ -57,7 +57,9 @@ const Header = () => {
   return (
     <div className="p-3 shadow-sm flex justify-between items-center px-5">
       <div>
-        <img src="/logo.svg" alt="icon logo" />
+        <img src="/logo.svg" alt="icon logo" 
+        className="hover:cursor-pointer" 
+        onClick={()=>navigate('/')}/>
       </div>
 
       <div>
@@ -66,11 +68,11 @@ const Header = () => {
             {/* Buttons for large screens */}
             <div className='hidden sm:flex gap-5 items-center'>
               <Button
-                onClick={() => navigate('/create-trip')}
+                onClick={() => navigate('/create-shop')}
                 className='rounded-full'
                 variant='outline'
               >
-                + Create Trip
+                + Create Shop
               </Button>
 
               <Button
@@ -110,8 +112,8 @@ const Header = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => navigate('/create-trip')}>
-                    + Create Trip
+                  <DropdownMenuItem onClick={() => navigate('/create-shop')}>
+                    + Create Shop
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate('/my-trips')}>
                     My Trips
