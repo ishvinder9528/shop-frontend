@@ -1,131 +1,57 @@
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "../ui/button"
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
 import { useEffect, useState } from "react"
-import { IoInformationCircleSharp } from "react-icons/io5";
-import {
-    HoverCard,
-    HoverCardContent,
-    HoverCardTrigger,
-} from "@/components/ui/hover-card"
+
 import { GET_SHOPS } from "./services"
+import Form from "./components/Form"
+import ShopTable from "./components/Table";
+import { TbLoaderQuarter } from "react-icons/tb";
 
 const CreateShop = () => {
-    const [shops, setShops] = useState([{
-        name: 'GuruKirpa Collection',
-        location: 'Noorpur',
-        gst: 'AAN39830ONK0832',
-        phone: '983783474',
-        about: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum in dicta accusamus maiores dolore dignissimos consequuntur ad, ipsa reiciendis vero earum illo esse distinctio neque, culpa dolores repellat aspernatur eaque'
-    }])
+    const [shops, setShops] = useState([])
 
-    useEffect(() => {      
+    useEffect(() => {
         fetchShops();
     }, []);
-    
+
+
+    const [loading, setLoading] = useState(true);
+
     const fetchShops = async () => {
         try {
-            const response = await GET_SHOPS();  // Assuming this returns an array
-            console.log('shops:', response);
+            setLoading(true);
+            const response = await GET_SHOPS();
             if (Array.isArray(response)) {
-                setShops(response);  // Only set if it's an array
+                setShops(response);
             } else {
                 console.error("Expected an array but got:", response);
             }
         } catch (error) {
             console.error("Error fetching shops:", error);
+        } finally {
+            setLoading(false);
         }
     };
-    
+
+
 
     return (
-        <div className="my-6 mx-[65px] grid grid-cols-2 gap-5">
+        <div className="my-6 mx-3 md:mx-[65px] grid grid-cols-1 lg:grid-cols-2 gap-5">
             {/* shpop form */}
-            <div className="">
-                <h2 className="font-bold text-2xl pb-2 shadow-sm">Add Shop +</h2>
-
-                <div className="my-5 flex flex-col gap-3">
-                    <div className="flex flex-col gap-2">
-                        <h3 className="text-xl">Shop Name</h3>
-                        <Input type='text'
-                            placeholder='Enter Shop Name' />
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                        <h3 className="text-xl">Location</h3>
-                        <Input type='text' placeholder='Enter Shop Location' />
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                        <h3 className="text-xl">GST Number</h3>
-                        <Input type='text' placeholder='Enter GST Number' />
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                        <h3 className="text-xl">Phone Number</h3>
-                        <Input type='number' placeholder='eg. 1234567890' />
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                        <h3 className="text-xl">About</h3>
-                        <Textarea placeholder="Any information about this Shop." />
-                    </div>
-                </div>
-
-                <div className="flex justify-end">
-                    <Button>Create Shop</Button>
-                </div>
-
-            </div>
+            <Form />
 
             {/* shop data */}
-            <div className="border">
+            <div className="">
                 <h2 className="font-bold text-2xl pb-2 shadow-sm">Shops</h2>
 
                 <div>
-                    <Table>
-                        <TableCaption>Your All Shops.</TableCaption>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Name</TableHead>
-                                <TableHead>Location</TableHead>
-                                <TableHead>Phone</TableHead>
-                                <TableHead>GST</TableHead>
-                                <TableHead className="w-[100px]">About</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {shops.map((shop, index) => (
-                                <TableRow className='hover:cursor-pointer' key={index}>
-                                    <TableCell className="font-medium">{shop.name}</TableCell>
-                                    <TableCell>{shop.location}</TableCell>
-                                    <TableCell>{shop.phone}</TableCell>
-                                    <TableCell>{shop.gst}</TableCell>
-                                    <TableCell className="flex justify-center items-center">
-                                        <HoverCard>
-                                            <HoverCardTrigger>
-                                                <IoInformationCircleSharp className="h-10 w-5 hover:scale-75" />
-                                            </HoverCardTrigger>
-                                            <HoverCardContent>
-                                                {shop.about}
-                                            </HoverCardContent>
-                                        </HoverCard>
-                                    </TableCell>
 
-                                </TableRow>
-
-                            ))}
-                        </TableBody>
-                    </Table>
+                    {loading ?
+                        <div className="flex text-center items-center  mt-[200px]">
+                            <TbLoaderQuarter className="h-10 w-full animate-spin"/>
+                        </div> :
+                        shops.length == 0 ?
+                            <p>No Shops Available</p> :
+                            <ShopTable shops={shops} />
+                    }
 
                 </div>
             </div>
