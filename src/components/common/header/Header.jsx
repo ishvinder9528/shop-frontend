@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+
 import { UserContext } from '../../../context/userContext'
 import { useNavigate } from "react-router";
 
@@ -31,7 +32,6 @@ const Header = () => {
   const { user, setUser } = useContext(UserContext)
   const login = useGoogleLogin({
     onSuccess: (credResponse) => {
-      console.log(credResponse);
       getUserProfile(credResponse);
       setOpenDailog(false)
     },
@@ -47,7 +47,6 @@ const Header = () => {
         'Authorization': 'Bearer ' + token.access_token, 'Content-Type': 'application/json'
       }
     }).then((response) => {
-      console.log("response: " + JSON.stringify(response));
       localStorage.setItem("user", JSON.stringify(response.data))
       setOpenDailog(false);
       setUser(JSON.parse(localStorage.getItem('user')))
