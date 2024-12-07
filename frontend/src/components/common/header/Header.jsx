@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Button } from "../../ui/button";
 import {
   Dialog,
@@ -21,7 +21,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
+import { Avatar, AvatarImage, AvatarFallback } from '../../ui/avatar';
 
 import { UserContext } from '../../../context/userContext'
 import { useNavigate } from "react-router";
@@ -30,6 +30,15 @@ const Header = () => {
   const navigate = useNavigate()
   const [openDailog, setOpenDailog] = useState(false);
   const { user, setUser } = useContext(UserContext)
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
   const login = useGoogleLogin({
     onSuccess: (credResponse) => {
       getUserProfile(credResponse);
@@ -52,6 +61,16 @@ const Header = () => {
       setUser(JSON.parse(localStorage.getItem('user')))
     })
   }
+
+  // Get initials from user name
+  const getInitials = (name) => {
+    if (!name) return '?';
+    return name.split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   return (
     <div className="p-3 shadow-sm flex justify-between items-center px-5">
@@ -84,7 +103,16 @@ const Header = () => {
 
               <Popover>
                 <PopoverTrigger>
-                  <img src={user.picture} className='h-[35px] w-[35px] rounded-full' />
+                  <Avatar className="h-[35px] w-[35px]">
+                    <AvatarImage 
+                      src={user?.picture} 
+                      alt={user?.name}
+                      onError={() => setImageError(true)}
+                    />
+                    <AvatarFallback className="bg-primary text-primary-foreground">
+                      {getInitials(user?.name)}
+                    </AvatarFallback>
+                  </Avatar>
                 </PopoverTrigger>
                 <PopoverContent>
                   <h2
