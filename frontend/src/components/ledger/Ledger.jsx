@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getLedgerEntries, getLedgerSummary } from '../../services/ledgerService';
+import { getLedgerEntries, getLedgerSummary, getKhataEntries } from '../../services/ledgerService';
 import LedgerEntryForm from './LedgerEntryForm';
 import LedgerTable from './LedgerTable';
 import LedgerSummary from './LedgerSummary';
@@ -15,30 +15,36 @@ import BalanceSummary from './BalanceSummary';
 import RecentTransactions from './RecentTransactions';
 import SpendingChart from './SpendingChart';
 import BudgetOverview from './BudgetOverview';
+import KhataEntryForm from './KhataEntryForm';
+import KhataOverview from './KhataOverview';
 
 const Ledger = () => {
   const [entries, setEntries] = useState([]);
   const [summary, setSummary] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [selectedShop, setSelectedShop] = useState(null);
+  const [showKhataForm, setShowKhataForm] = useState(false);
+  const [khataEntries, setKhataEntries] = useState([]);
 
   useEffect(() => {
-    fetchLedgerData();
+    fetchAllData();
   }, [selectedShop]);
 
-  const fetchLedgerData = async () => {
+  const fetchAllData = async () => {
     try {
       const filters = selectedShop ? { shopId: selectedShop } : {};
-      const [entriesData, summaryData] = await Promise.all([
+      const [entriesData, summaryData, khataData] = await Promise.all([
         getLedgerEntries(filters),
-        getLedgerSummary(filters)
+        getLedgerSummary(filters),
+        getKhataEntries(filters)
       ]);
       setEntries(entriesData);
       setSummary(summaryData);
+      setKhataEntries(khataData);
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to fetch ledger data",
+        description: "Failed to fetch data",
         variant: "destructive",
       });
     }
@@ -48,7 +54,12 @@ const Ledger = () => {
     <div className="container mx-auto p-4 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Ledger</h1>
-        <Button onClick={() => setShowForm(true)}>Add Entry</Button>
+        <div className="space-x-4">
+          <Button onClick={() => setShowForm(true)}>Add Entry</Button>
+          <Button onClick={() => setShowKhataForm(true)} variant="outline">
+            Add Khata Entry
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -87,17 +98,33 @@ const Ledger = () => {
         <CardContent>
           <LedgerTable 
             entries={entries} 
-            onRefresh={fetchLedgerData}
+            onRefresh={fetchAllData}
           />
         </CardContent>
       </Card>
+
+      <div className="grid grid-cols-1 gap-6">
+        <KhataOverview 
+          entries={khataEntries} 
+          onRefresh={fetchAllData}
+        />
+      </div>
 
       <LedgerEntryForm 
         open={showForm}
         onClose={() => setShowForm(false)}
         onSuccess={() => {
           setShowForm(false);
-          fetchLedgerData();
+          fetchAllData();
+        }}
+      />
+
+      <KhataEntryForm
+        open={showKhataForm}
+        onClose={() => setShowKhataForm(false)}
+        onSuccess={() => {
+          setShowKhataForm(false);
+          fetchAllData();
         }}
       />
     </div>
