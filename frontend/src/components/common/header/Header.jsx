@@ -178,36 +178,9 @@ const Header = () => {
             </div>
           </>
         ) : (
-          <Button onClick={() => setOpenDailog(true)}>Sign In</Button>
+          <Button onClick={() => navigate('/login')}>Sign In</Button>
         )}
       </div>
-
-      <Dialog open={openDailog} onOpenChange={setOpenDailog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle></DialogTitle>
-            <DialogDescription>
-              <img src="/logo.svg" />
-              <h2 className="font-bold text-lg mt-7 flex justify-start">
-                Sign In with Google
-              </h2>
-              <p className="flex justify-start">
-                Sign in to the App with Google authentication securely
-              </p>
-
-              <Button
-                className="w-full mt-5 flex gap-4 items-center"
-                onClick={login}
-              >
-                <>
-                  <FcGoogle style={{ width: "28px", height: "28px" }} />
-                  Sign In with Google
-                </>
-              </Button>
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

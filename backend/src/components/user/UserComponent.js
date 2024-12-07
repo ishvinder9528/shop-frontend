@@ -16,30 +16,14 @@ export const GetUserCntrl = async (req, res) => {
 
 export const CreateUserCntrl = async (req, res) => {
     try {
-        const existingUser = await GetUserService(req.body.googleId);
-        if (existingUser) {
-            const updatedUser = await UpdateUserService(req.body.googleId, {
-                ...req.body,
-                lastLogin: new Date()
-            });
-            return res.status(200).json(updatedUser);
-        }
-
-        // Create new user
-        const userData = {
-            name: req.body.name,
-            email: req.body.email,
-            picture: req.body.picture,
-            googleId: req.body.googleId,
-            given_name: req.body.given_name,
-            family_name: req.body.family_name,
-            verified_email: req.body.verified_email
-        };
-
-        const user = await CreateUserService(userData);
-        res.status(201).json(user);
+        console.log('Received user data:', req.body);
+        const { user, token } = await CreateUserService(req.body);
+        res.status(201).json({ user, token });
     } catch (error) {
-        logger.error('Error creating user:', { error: error.message });
+        logger.error('Error creating user:', { 
+            error: error.message,
+            body: req.body 
+        });
         res.status(400).json({ message: error.message });
     }
 };

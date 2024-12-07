@@ -1,4 +1,5 @@
 import User from "../../models/User.js";
+import jwt from 'jsonwebtoken';
 
 export const GetUserService = async (googleId) => {
     try {
@@ -11,13 +12,50 @@ export const GetUserService = async (googleId) => {
 
 export const CreateUserService = async (userData) => {
     try {
-        const { id, ...userDataWithoutId } = userData;
+        // Remove _id if it exists in userData
+        const { _id, ...userDataWithoutId } = userData;
         
-        const user = new User(userDataWithoutId);
-        await user.save();
-        return user;
+        // Ensure required fields are present
+        if (!userDataWithoutId.name || !userDataWithoutId.email || !userDataWithoutId.googleId) {
+            throw new Error('Missing required fields: name, email, or googleId');
+        }
+
+        // Check if user exists by googleId
+        let user = await User.findOne({ googleId: userDataWithoutId.googleId });
+        
+        if (user) {
+            // Update existing user
+            user = await User.findOneAndUpdate(
+                { googleId: userDataWithoutId.googleId },
+                { 
+                    ...userDataWithoutId,
+                    lastLogin: new Date()
+                },
+                { new: true }
+            );
+        } else {
+            // Create new user
+            const newUserData = {
+                name: userDataWithoutId.name,
+                email: userDataWithoutId.email,
+                googleId: userDataWithoutId.googleId,
+                picture: userDataWithoutId.picture,
+                given_name: userDataWithoutId.given_name,
+                family_name: userDataWithoutId.family_name,
+                verified_email: userDataWithoutId.verified_email
+            };
+            
+            user = new User(newUserData);
+            await user.save();
+        }
+
+        // Generate token
+        const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
+        
+        return { user, token };
     } catch (error) {
-        throw new Error(`Error creating user: ${error.message}`);
+        console.error('CreateUserService error:', error);
+        throw new Error(`Error creating/updating user: ${error.message}`);
     }
 };
 

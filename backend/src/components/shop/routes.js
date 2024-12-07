@@ -1,18 +1,14 @@
 import express from 'express';
-import { CreateShopCntrl, DeleteShopCntrl, GetShopByIdCntrl, GetShopDataCntrl } from './ShopComponent.js';
+import { GetShopDataCntrl, GetShopByIdCntrl, CreateShopCntrl, DeleteShopCntrl } from './ShopComponent.js';
+import { auth } from '../../middleware/auth.js';
 
 const router = express.Router();
 
-// Get all shops
+router.use(auth); // Protect all shop routes
+
 router.get('/', GetShopDataCntrl);
-
-// Get single shop
 router.get('/:id', GetShopByIdCntrl);
-
-// Create shop
 router.post('/', CreateShopCntrl);
-
-// Delete shop
 router.delete('/:id', DeleteShopCntrl);
 
 export default router; 

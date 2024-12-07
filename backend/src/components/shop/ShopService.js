@@ -1,29 +1,32 @@
 import Shop from "../../models/Shop.js";
 
-export const GetShopDataService = async () => {
+export const GetShopDataService = async (userId) => {
     try {
-        const shops = await Shop.find({})
-            .select('name location gst phone about')
-            .sort({ createdAt: -1 });
+        const shops = await Shop.find({ user: userId });
         return shops;
     } catch (error) {
         throw new Error(`Error fetching shops: ${error.message}`);
     }
 };
 
-export const GetShopByIdService = async (id) => {
+export const GetShopByIdService = async (shopId, userId) => {
     try {
-        const shop = await Shop.findById(id);
-        if (!shop) throw new Error('Shop not found');
+        const shop = await Shop.findOne({ _id: shopId, user: userId });
+        if (!shop) {
+            throw new Error('Shop not found');
+        }
         return shop;
     } catch (error) {
         throw new Error(`Error fetching shop: ${error.message}`);
     }
 };
 
-export const CreateShopService = async (shopData) => {
+export const CreateShopService = async (shopData, userId) => {
     try {
-        const shop = new Shop(shopData);
+        const shop = new Shop({
+            ...shopData,
+            user: userId
+        });
         await shop.save();
         return shop;
     } catch (error) {
@@ -31,10 +34,12 @@ export const CreateShopService = async (shopData) => {
     }
 };
 
-export const DeleteShopService = async (id) => {
+export const DeleteShopService = async (shopId, userId) => {
     try {
-        const shop = await Shop.findByIdAndDelete(id);
-        if (!shop) throw new Error('Shop not found');
+        const shop = await Shop.findOneAndDelete({ _id: shopId, user: userId });
+        if (!shop) {
+            throw new Error('Shop not found');
+        }
         return shop;
     } catch (error) {
         throw new Error(`Error deleting shop: ${error.message}`);

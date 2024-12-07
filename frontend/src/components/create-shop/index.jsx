@@ -4,14 +4,20 @@ import Form from "./components/Form"
 import ShopTable from "./components/Table";
 import { TbLoaderQuarter } from "react-icons/tb";
 import { Input } from "@/components/ui/input";
-
+import { useNavigate } from "react-router";
 const CreateShop = () => {
     const [shops, setShops] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
 
+    const navigate = useNavigate();
     useEffect(() => {
         fetchShops();
+        const user = localStorage.getItem('user');
+        if (!user) {
+            console.log('No user found');
+            navigate('/login')
+        }
     }, []);
 
     const fetchShops = async () => {

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
 
 const userSchema = new mongoose.Schema({
     name: { 
@@ -18,8 +19,8 @@ const userSchema = new mongoose.Schema({
     },
     googleId: { 
         type: String, 
-        required: true, 
-        unique: true 
+        unique: true, 
+        sparse: true 
     },
     given_name: {
         type: String,
@@ -42,10 +43,17 @@ const userSchema = new mongoose.Schema({
     versionKey: false
 });
 
+userSchema.methods.generateAuthToken = async function() {
+    const user = this;
+    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
+    return token;
+};
+
 userSchema.set('toJSON', {
     transform: (doc, ret) => {
         ret.id = ret._id;
         delete ret._id;
+        delete ret.__v;
         return ret;
     }
 });
