@@ -1,17 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useState } from "react";
-import { updateKhataPayment } from "@/services/khataService";
-import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
-import { format } from 'date-fns';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import KhataEntryDialog from './KhataEntryDialog';
+import { useState, useMemo } from "react";
 
 const KhataOverview = ({ entries, onRefresh }) => {
-  const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
-  const [paymentAmount, setPaymentAmount] = useState({});
+  const [selectedEntry, setSelectedEntry] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('ALL');
 
   const formatAmount = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -21,66 +19,58 @@ const KhataOverview = ({ entries, onRefresh }) => {
     }).format(amount);
   };
 
-  const formatDateTime = (date) => {
-    return format(new Date(date), 'dd MMM yyyy, hh:mm a');
-  };
-
-  const handlePaymentAmountChange = (entryId, value) => {
-    setPaymentAmount(prev => ({
-      ...prev,
-      [entryId]: value
-    }));
-  };
-
-  const handlePayment = async (entryId) => {
-    const amount = parseFloat(paymentAmount[entryId]);
-    if (!amount || amount <= 0) {
-      toast({
-        title: "Error",
-        description: "Please enter a valid payment amount",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setLoading(true);
-    try {
-      await updateKhataPayment(entryId, { amount });
-      toast({
-        title: "Success",
-        description: "Payment recorded successfully",
-      });
-      setPaymentAmount(prev => ({ ...prev, [entryId]: '' }));
-      onRefresh();
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const filteredEntries = useMemo(() => {
+    return entries.filter(entry => {
+      const matchesSearch = entry.buyerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          entry.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus = statusFilter === 'ALL' || entry.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [entries, searchQuery, statusFilter]);
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>All Khata Entries</CardTitle>
+    
+
+       
+        <div className="mt-4 flex gap-16  " style={{marginTop:"18px"}} >
+          
+          <Input
+            placeholder="Search by name or description..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger>
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">All Entries</SelectItem>
+              <SelectItem value="PENDING">Pending</SelectItem>
+              <SelectItem value="COMPLETED">Completed</SelectItem>
+            </SelectContent>
+          </Select>
+        
+        </div>
+        
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[400px] pr-4">
+        <ScrollArea className="h-[400px] ">
           <div className="space-y-4">
-            {entries && entries.length > 0 ? (
-              entries.map((entry) => (
-                <Card key={entry._id} className="p-4">
+            {filteredEntries.length > 0 ? (
+              filteredEntries.map((entry) => (
+                <Card 
+                  key={entry._id} 
+                  className="p-4 cursor-pointer hover:bg-accent transition-colors"
+                  onClick={() => setSelectedEntry(entry)}
+                >
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="font-semibold">{entry.buyerName}</h3>
                       <p className="text-sm text-muted-foreground">{entry.description}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Created: {formatDateTime(entry.createdAt)}
-                      </p>
                     </div>
                     <Badge variant={entry.status === 'COMPLETED' ? 'success' : 'secondary'}>
                       {entry.status}
@@ -101,39 +91,6 @@ const KhataOverview = ({ entries, onRefresh }) => {
                       <span className="font-medium">{formatAmount(entry.amount - entry.paidAmount)}</span>
                     </div>
                   </div>
-
-                  <div className="mt-4">
-                    <h4 className="text-sm font-semibold mb-2">Payment History</h4>
-                    <div className="space-y-2">
-                      {entry.payments?.map((payment, index) => (
-                        <div key={index} className="text-sm flex justify-between items-center bg-muted/50 p-2 rounded">
-                          <span>{formatDateTime(payment.date)}</span>
-                          <span className="font-medium">{formatAmount(payment.amount)}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {entry.status !== 'COMPLETED' && (
-                    <div className="mt-4 space-y-2">
-                      <div className="flex gap-2">
-                        <Input
-                          type="number"
-                          min="0"
-                          step="0.01"
-                          placeholder="Enter payment amount"
-                          value={paymentAmount[entry._id] || ''}
-                          onChange={(e) => handlePaymentAmountChange(entry._id, e.target.value)}
-                        />
-                        <Button
-                          disabled={loading}
-                          onClick={() => handlePayment(entry._id)}
-                        >
-                          Pay
-                        </Button>
-                      </div>
-                    </div>
-                  )}
                 </Card>
               ))
             ) : (
@@ -144,6 +101,13 @@ const KhataOverview = ({ entries, onRefresh }) => {
           </div>
         </ScrollArea>
       </CardContent>
+
+      <KhataEntryDialog
+        entry={selectedEntry}
+        open={!!selectedEntry}
+        onClose={() => setSelectedEntry(null)}
+        onRefresh={onRefresh}
+      />
     </Card>
   );
 };

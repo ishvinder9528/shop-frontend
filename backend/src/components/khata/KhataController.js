@@ -3,7 +3,8 @@ import {
     GetKhataEntriesService,
     UpdateKhataPaymentService,
     DeleteKhataEntryService,
-    GetKhataSummaryService
+    GetKhataSummaryService,
+    UpdateKhataEntryService
 } from './KhataService.js';
 import logger from '../../config/logger.js';
 
@@ -38,10 +39,12 @@ export const GetKhataEntriesCntrl = async (req, res) => {
 
 export const UpdateKhataPaymentCntrl = async (req, res) => {
     try {
+        const { action, ...paymentData } = req.body;
         const entry = await UpdateKhataPaymentService(
             req.params.id, 
             req.user._id,
-            { amount: parseFloat(req.body.amount) }
+            paymentData,
+            action
         );
         res.status(200).json(entry);
     } catch (error) {
@@ -66,6 +69,20 @@ export const GetKhataSummaryCntrl = async (req, res) => {
         res.status(200).json(summary);
     } catch (error) {
         logger.error('Error fetching khata summary:', error);
+        res.status(400).json({ message: error.message });
+    }
+};
+
+export const UpdateKhataEntryCntrl = async (req, res) => {
+    try {
+        const entry = await UpdateKhataEntryService(
+            req.params.id,
+            req.user._id,
+            req.body
+        );
+        res.status(200).json(entry);
+    } catch (error) {
+        logger.error('Error updating khata entry:', error);
         res.status(400).json({ message: error.message });
     }
 }; 

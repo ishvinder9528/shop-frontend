@@ -5,7 +5,8 @@ import {
     GetKhataEntriesCntrl,
     UpdateKhataPaymentCntrl,
     DeleteKhataEntryCntrl,
-    GetKhataSummaryCntrl
+    GetKhataSummaryCntrl,
+    UpdateKhataEntryCntrl
 } from './KhataController.js';
 
 const router = express.Router();
@@ -17,6 +18,7 @@ router.use(auth);
 router.post('/', CreateKhataEntryCntrl);
 router.get('/', GetKhataEntriesCntrl);
 router.get('/summary', GetKhataSummaryCntrl);
+router.put('/:id', UpdateKhataEntryCntrl);
 router.put('/:id/payment', UpdateKhataPaymentCntrl);
 router.delete('/:id', DeleteKhataEntryCntrl);
 

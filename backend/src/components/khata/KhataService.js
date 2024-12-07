@@ -23,7 +23,7 @@ export const GetKhataEntriesService = async (filters) => {
     }
 };
 
-export const UpdateKhataPaymentService = async (entryId, userId, paymentData) => {
+export const UpdateKhataPaymentService = async (entryId, userId, paymentData, action = 'add') => {
     try {
         const entry = await Khata.findOne({ _id: entryId, userId });
         
@@ -31,25 +31,56 @@ export const UpdateKhataPaymentService = async (entryId, userId, paymentData) =>
             throw new Error('Khata entry not found');
         }
 
-        if (entry.status === 'COMPLETED') {
+        if (entry.status === 'COMPLETED' && action === 'add') {
             throw new Error('This khata is already completed');
         }
 
-        const newPaidAmount = entry.paidAmount + paymentData.amount;
-        
-        // Add payment to history
-        entry.payments.push({
-            amount: paymentData.amount,
-            date: new Date()
-        });
-        
-        // Update paid amount
-        entry.paidAmount = newPaidAmount;
+        let oldAmount = 0;
 
-        // Check if fully paid
-        if (newPaidAmount >= entry.amount) {
+        switch (action) {
+            case 'add':
+                // Add new payment
+                entry.payments.push({
+                    amount: paymentData.amount,
+                    date: paymentData.date
+                });
+                entry.paidAmount += paymentData.amount;
+                break;
+
+            case 'edit':
+                // Find and update existing payment
+                const payment = entry.payments.id(paymentData.paymentId);
+                if (!payment) {
+                    throw new Error('Payment not found');
+                }
+                oldAmount = payment.amount;
+                payment.amount = paymentData.amount;
+                payment.date = paymentData.date;
+                // Adjust total paid amount
+                entry.paidAmount = entry.paidAmount - oldAmount + paymentData.amount;
+                break;
+
+            case 'delete':
+                // Find and delete payment
+                const paymentToDelete = entry.payments.id(paymentData.paymentId);
+                if (!paymentToDelete) {
+                    throw new Error('Payment not found');
+                }
+                // Adjust total paid amount
+                entry.paidAmount -= paymentToDelete.amount;
+                entry.payments.pull(paymentToDelete._id);
+                break;
+
+            default:
+                throw new Error('Invalid action');
+        }
+
+        // Update status based on paid amount
+        if (entry.paidAmount >= entry.amount) {
             entry.status = 'COMPLETED';
             entry.paidAmount = entry.amount; // Ensure we don't exceed total amount
+        } else {
+            entry.status = 'PENDING';
         }
 
         await entry.save();
@@ -112,6 +143,39 @@ export const GetKhataSummaryService = async (userId) => {
         return summary;
     } catch (error) {
         logger.error('Error in GetKhataSummaryService:', error);
+        throw error;
+    }
+};
+
+export const UpdateKhataEntryService = async (entryId, userId, data) => {
+    try {
+        const entry = await Khata.findOne({ _id: entryId, userId });
+        if (!entry) {
+            throw new Error('Khata entry not found');
+        }
+
+        // Update basic info
+        entry.buyerName = data.buyerName;
+        entry.description = data.description;
+
+        // Handle amount change
+        if (data.amount !== entry.amount) {
+            if (entry.paidAmount > data.amount) {
+                throw new Error('New amount cannot be less than already paid amount');
+            }
+            entry.amount = data.amount;
+            // Update status based on new amount
+            if (entry.paidAmount >= entry.amount) {
+                entry.status = 'COMPLETED';
+            } else {
+                entry.status = 'PENDING';
+            }
+        }
+
+        await entry.save();
+        return entry;
+    } catch (error) {
+        logger.error('Error in UpdateKhataEntryService:', error);
         throw error;
     }
 }; 

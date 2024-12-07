@@ -20,9 +20,12 @@ export const getKhataEntries = async () => {
     }
 };
 
-export const updateKhataPayment = async (entryId, paymentData) => {
+export const updateKhataPayment = async (entryId, paymentData, action = 'add') => {
     try {
-        const response = await axios.put(`${API_URL}/khata/${entryId}/payment`, paymentData);
+        const response = await axios.put(
+            `${API_URL}/khata/${entryId}/payment`, 
+            { ...paymentData, action }
+        );
         return response.data;
     } catch (error) {
         throw error.response?.data || error;
@@ -41,6 +44,15 @@ export const deleteKhataEntry = async (entryId) => {
 export const getKhataSummary = async () => {
     try {
         const response = await axios.get(`${API_URL}/khata/summary`);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error;
+    }
+};
+
+export const updateKhataEntry = async (entryId, data) => {
+    try {
+        const response = await axios.put(`${API_URL}/khata/${entryId}`, data);
         return response.data;
     } catch (error) {
         throw error.response?.data || error;

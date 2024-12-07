@@ -58,10 +58,13 @@ const Khata = () => {
                 <Card>
                     <CardHeader>
                         <CardTitle>Recent Transactions</CardTitle>
-                        <CardDescription>Latest khata activities</CardDescription>
+                        <CardDescription>Latest khata activities and payments</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <KhataTransactions entries={entries.slice(0, 5)} />
+                        <KhataTransactions 
+                            entries={entries} 
+                            onRefresh={fetchData}
+                        />
                     </CardContent>
                 </Card>
 

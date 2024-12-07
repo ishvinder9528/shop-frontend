@@ -117,3 +117,36 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Add these styles */
+.dialog-content-wide {
+  max-width: 600px !important;
+}
+
+.payment-history-item {
+  @apply flex justify-between items-center bg-muted/50 p-3 rounded-lg hover:bg-muted transition-colors;
+}
+
+.payment-history-item:hover .payment-actions {
+  @apply opacity-100;
+}
+
+.payment-actions {
+  @apply opacity-0 transition-opacity;
+}
+
+/* Add these styles */
+.scroll-to-top {
+  animation: fade-in 0.3s ease-in-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

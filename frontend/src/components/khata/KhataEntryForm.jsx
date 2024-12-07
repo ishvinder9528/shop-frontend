@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createKhataEntry } from '@/services/khataService';
 import { useToast } from "@/hooks/use-toast";
+import { format } from 'date-fns';
 
 const KhataEntryForm = ({ open, onClose, onSuccess }) => {
   const { toast } = useToast();
@@ -13,6 +14,7 @@ const KhataEntryForm = ({ open, onClose, onSuccess }) => {
     buyerName: '',
     amount: '',
     description: '',
+    date: format(new Date(), 'yyyy-MM-dd'),
   });
 
   const handleSubmit = async (e) => {
@@ -73,9 +75,19 @@ const KhataEntryForm = ({ open, onClose, onSuccess }) => {
             <Label htmlFor="description">Description</Label>
             <Input
               id="description"
-              required
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="date">Date</Label>
+            <Input
+              id="date"
+              type="date"
+              required
+              value={formData.date}
+              onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
             />
           </div>
 
