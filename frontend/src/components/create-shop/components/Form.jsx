@@ -62,7 +62,7 @@ const Form = () => {
 
   return (
     <div>
-      <h2 className="font-bold text-2xl pb-2 shadow-sm">Add Shop +</h2>
+      
 
       <div className="lg:hidden">
         {!shopFormVisibile && (

@@ -107,6 +107,7 @@ const ShopTable = ({ shops }) => {
                                     e.preventDefault();
                                     handlePageChange(currentPage - 1);
                                 }}
+                                className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
                                 disabled={currentPage === 1}
                             />
                         </PaginationItem>
@@ -133,7 +134,8 @@ const ShopTable = ({ shops }) => {
                                     e.preventDefault();
                                     handlePageChange(currentPage + 1);
                                 }}
-                                disabled={currentPage == + totalPages}
+                                className={currentPage >= totalPages ? "pointer-events-none opacity-50" : ""}
+                                disabled={currentPage >= totalPages}
                             />
                         </PaginationItem>
                     </PaginationContent>
