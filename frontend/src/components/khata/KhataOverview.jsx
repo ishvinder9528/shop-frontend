@@ -21,8 +21,8 @@ const KhataOverview = ({ entries, onRefresh }) => {
 
   const filteredEntries = useMemo(() => {
     return entries.filter(entry => {
-      const matchesSearch = entry.buyerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          entry.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = entry?.buyerName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          entry?.description?.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesStatus = statusFilter === 'ALL' || entry.status === statusFilter;
       return matchesSearch && matchesStatus;
     });

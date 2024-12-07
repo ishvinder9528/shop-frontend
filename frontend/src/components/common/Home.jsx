@@ -15,6 +15,12 @@ const Home = () => {
       </h2>
       <Button onClick={()=>navigate('/create-shop')} 
         className='my-3'>Get Started. It&apos;s Free</Button>
+    
+    
+    < div>
+    <img src="/mac.svg" className="h-[450px] w-full my-5" />
+    </div>
+
     </div>
   );
 };

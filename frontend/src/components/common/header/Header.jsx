@@ -96,7 +96,7 @@ const Header = () => {
         <img 
           src="/logo.svg" 
           alt="icon logo" 
-          className="hover:cursor-pointer" 
+          className="hover:cursor-pointer h-[40px] w-auto" 
           onClick={() => navigate('/')}
         />
         {user && (
@@ -128,21 +128,10 @@ const Header = () => {
           <>
             {/* Buttons for large screens */}
             <div className='hidden sm:flex gap-5 items-center'>
-              <Button
-                onClick={() => navigate('/create-shop')}
-                className='rounded-full'
-                variant='outline'
-              >
-                + Create Shop
-              </Button>
-
-              <Button
-                onClick={() => navigate('/my-trips')}
-                className='rounded-full'
-                variant='outline'
-              >
-                My Trips
-              </Button>
+              
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-gray-500">{user?.email}</p>
+              </div>
 
               <Popover>
                 <PopoverTrigger>
@@ -175,31 +164,7 @@ const Header = () => {
 
             {/* Dropdown for small screens */}
             <div className='flex sm:hidden items-center'>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Button variant='outline' className='rounded-full'>
-                    Menu
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => navigate('/create-shop')}>
-                    + Create Shop
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate('/my-trips')}>
-                    My Trips
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      googleLogout();
-                      localStorage.clear();
-                      setUser(null);
-                      navigate('/');
-                    }}
-                  >
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+         
             </div>
           </>
         ) : (
