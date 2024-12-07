@@ -40,6 +40,9 @@ const CreateShop = () => {
 
             {/* shop data */}
             <div className="">
+                <div className="flex justify-between items-center">
+                    
+                </div>
                 <h2 className="font-bold text-2xl pb-2 shadow-sm">Shops</h2>
 
                 <div>

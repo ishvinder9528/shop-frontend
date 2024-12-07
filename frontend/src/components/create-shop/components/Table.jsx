@@ -57,7 +57,7 @@ const ShopTable = ({ shops }) => {
             <Table>
                 <TableCaption>Your All Shops.</TableCaption>
                 <TableHeader>
-                    <TableRow className='scale-95'>
+                    <TableRow className=''>
                         <TableHead>Name</TableHead>
                         <TableHead>Location</TableHead>
                         <TableHead>Phone</TableHead>
@@ -69,16 +69,25 @@ const ShopTable = ({ shops }) => {
                     {paginatedShops.map((shop, index) => (
                         <TableRow className="hover:cursor-pointer  hover:bg-gray-200" key={index}>
                             <TableCell className="font-medium">{shop.name}</TableCell>
-                            <TableCell>{shop.location}</TableCell>
-                            <TableCell>{shop.phone}</TableCell>
-                            <TableCell>{shop.gst}</TableCell>
+                            <TableCell>{shop.location ? shop.location : <span className="text-gray-400">
+                                No location information.
+                            </span>
+                            }</TableCell>
+                            <TableCell>{shop.phone ? shop.phone : <span className="text-gray-400">
+                                No phone number.
+                            </span>}</TableCell>
+                            <TableCell>{shop.gst ? shop.gst : <span className="text-gray-400">
+                                No GST number.
+                            </span>}</TableCell>
                             <TableCell className="flex justify-center items-center relative">
                                 <HoverCard open={openIndex === index}>
                                     <HoverCardTrigger onClick={() => handleToggle(index)}>
                                         <IoInformationCircleSharp className="h-10 w-5 hover:scale-75" />
                                     </HoverCardTrigger>
                                     <HoverCardContent side="top" align="center" className="z-[9999]">
-                                        {shop.about}
+                                        {shop.about ? shop.about : <span className="text-gray-400">
+                                            No information about this shop.
+                                        </span>}
                                     </HoverCardContent>
                                 </HoverCard>
                             </TableCell>
