@@ -92,10 +92,29 @@ const Header = () => {
 
   return (
     <div className="p-3 shadow-sm flex justify-between items-center px-5">
-      <div>
-        <img src="/logo.svg" alt="icon logo" 
-        className="hover:cursor-pointer" 
-        onClick={()=>navigate('/')}/>
+      <div className="flex items-center space-x-6">
+        <img 
+          src="/logo.svg" 
+          alt="icon logo" 
+          className="hover:cursor-pointer" 
+          onClick={() => navigate('/')}
+        />
+        {user && (
+          <nav className="hidden md:flex space-x-4">
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate('/')}
+            >
+              Shops
+            </Button>
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate('/ledger')}
+            >
+              Ledger
+            </Button>
+          </nav>
+        )}
       </div>
 
       <div>

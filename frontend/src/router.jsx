@@ -4,7 +4,7 @@ import Home from "./components/common/Home";
 import CreateShop from "./components/create-shop";
 import Login from "./components/common/auth/Login";
 import Register from "./components/common/auth/Register";
-
+import Ledger from "./components/ledger/index";
 const Router = createBrowserRouter([
     {
         path: '/',
@@ -25,6 +25,10 @@ const Router = createBrowserRouter([
             {
                 path: 'register',
                 element: <Register />
+            },
+            {
+                path: 'ledger',
+                element: <Ledger />
             }
         ],
     },

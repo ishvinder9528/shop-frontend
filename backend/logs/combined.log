@@ -106,3 +106,14 @@
 {"error":"Error creating/updating user: User validation failed: _id: Cast to ObjectId failed for value \"100853637648719293829\" (type string) at path \"_id\" because of \"BSONError\"","level":"error","message":"Error creating user:","service":"shop-service","timestamp":"2024-12-08 00:36:47"}
 {"duration":"34ms","ip":"::1","level":"info","message":"Request processed","method":"POST","service":"shop-service","status":400,"timestamp":"2024-12-08 00:36:47","url":"/","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"}
 {"level":"info","message":"Server is running on port 5000","service":"shop-service","timestamp":"2024-12-08 00:39:59"}
+{"level":"info","message":"Server is running on port 5000","service":"shop-service","timestamp":"2024-12-08 00:47:51"}
+{"level":"info","message":"Server is running on port 5000","service":"shop-service","timestamp":"2024-12-08 00:48:01"}
+{"level":"info","message":"Server is running on port 5000","service":"shop-service","timestamp":"2024-12-08 00:48:08"}
+{"level":"info","message":"Server is running on port 5000","service":"shop-service","timestamp":"2024-12-08 00:48:10"}
+{"level":"info","message":"Server is running on port 5000","service":"shop-service","timestamp":"2024-12-08 00:48:37"}
+{"level":"info","message":"Server is running on port 5000","service":"shop-service","timestamp":"2024-12-08 00:49:31"}
+{"level":"info","message":"Server is running on port 5000","service":"shop-service","timestamp":"2024-12-08 00:49:38"}
+{"level":"info","message":"Server is running on port 5000","service":"shop-service","timestamp":"2024-12-08 00:49:57"}
+{"level":"info","message":"Server is running on port 5000","service":"shop-service","timestamp":"2024-12-08 00:49:58"}
+{"duration":"94ms","ip":"::1","level":"info","message":"Request processed","method":"GET","service":"shop-service","status":304,"timestamp":"2024-12-08 00:52:35","url":"/","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"}
+{"duration":"53ms","ip":"::1","level":"info","message":"Request processed","method":"GET","service":"shop-service","status":304,"timestamp":"2024-12-08 00:52:35","url":"/","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"}
