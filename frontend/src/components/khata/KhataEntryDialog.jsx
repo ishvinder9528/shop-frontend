@@ -52,16 +52,28 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
         description: '',
         amount: ''
     });
+    const [currentEntry, setCurrentEntry] = useState(null);
 
     useEffect(() => {
         if (entry) {
+            setCurrentEntry(entry);
             setEditForm({
                 buyerName: entry.buyerName,
                 description: entry.description,
                 amount: entry.amount.toString()
             });
         }
-    }, [entry,]);
+    }, [entry]);
+
+    useEffect(() => {
+        if (!open) {
+            setPaymentAmount('');
+            setPaymentDate(format(new Date(), 'yyyy-MM-dd'));
+            setEditingPayment(null);
+            setIsEditing(false);
+            setSelectedPayment(null);
+        }
+    }, [open]);
 
     const formatAmount = (amount) => {
         return new Intl.NumberFormat('en-IN', {
@@ -88,19 +100,21 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
 
         setLoading(true);
         try {
+            let updatedEntry;
             if (editingPayment) {
-                await updateKhataPayment(entry._id, {
+                updatedEntry = await updateKhataPayment(currentEntry._id, {
                     paymentId: editingPayment._id,
                     amount,
                     date: new Date(paymentDate)
                 }, 'edit');
             } else {
-                await updateKhataPayment(entry._id, {
+                updatedEntry = await updateKhataPayment(currentEntry._id, {
                     amount,
                     date: new Date(paymentDate)
                 }, 'add');
             }
 
+            setCurrentEntry(updatedEntry);
             toast({
                 title: "Success",
                 description: `Payment ${editingPayment ? 'updated' : 'recorded'} successfully`,
@@ -108,7 +122,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
             setPaymentAmount('');
             setPaymentDate(format(new Date(), 'yyyy-MM-dd'));
             setEditingPayment(null);
-            onRefresh();
+            await onRefresh();
         } catch (error) {
             toast({
                 title: "Error",
@@ -131,16 +145,17 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
 
         setLoading(true);
         try {
-            await updateKhataPayment(entry._id, {
+            const updatedEntry = await updateKhataPayment(currentEntry._id, {
                 paymentId: selectedPayment._id
             }, 'delete');
 
+            setCurrentEntry(updatedEntry);
             toast({
                 title: "Success",
                 description: "Payment deleted successfully",
             });
             setSelectedPayment(null);
-            onRefresh();
+            await onRefresh();
         } catch (error) {
             toast({
                 title: "Error",
@@ -156,13 +171,13 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
     const handleDelete = async () => {
         setLoading(true);
         try {
-            await deleteKhataEntry(entry._id);
+            await deleteKhataEntry(currentEntry._id);
             toast({
                 title: "Success",
                 description: "Khata entry deleted successfully",
             });
             onClose();
-            onRefresh();
+            await onRefresh();
         } catch (error) {
             toast({
                 title: "Error",
@@ -178,13 +193,14 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
     const handleEdit = async () => {
         setLoading(true);
         try {
-            await updateKhataEntry(entry._id, editForm);
+            const updatedEntry = await updateKhataEntry(currentEntry._id, editForm);
+            setCurrentEntry(updatedEntry);
             toast({
                 title: "Success",
                 description: "Khata entry updated successfully",
             });
             setIsEditing(false);
-            onRefresh();
+            await onRefresh();
         } catch (error) {
             toast({
                 title: "Error",
@@ -194,6 +210,10 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleRefresh = async () => {
+        await onRefresh();
     };
 
     if (!entry) return null;
@@ -238,8 +258,8 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
                                     </div>
                                 ) : (
                                     <div>
-                                        <DialogTitle className="text-xl">{entry?.buyerName}</DialogTitle>
-                                        <p className="text-sm text-muted-foreground mt-1">{entry?.description}</p>
+                                        <DialogTitle className="text-xl">{currentEntry?.buyerName}</DialogTitle>
+                                        <p className="text-sm text-muted-foreground mt-1">{currentEntry?.description}</p>
                                     </div>
                                 )}
                             </div>
@@ -294,7 +314,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
                                             <CardTitle className="text-sm">Total Amount</CardTitle>
                                         </CardHeader>
                                         <CardContent>
-                                            <p className="text-2xl font-bold">{formatAmount(entry?.amount)}</p>
+                                            <p className="text-2xl font-bold">{formatAmount(currentEntry?.amount)}</p>
                                         </CardContent>
                                     </Card>
                                     <Card>
@@ -302,7 +322,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
                                             <CardTitle className="text-sm">Remaining</CardTitle>
                                         </CardHeader>
                                         <CardContent>
-                                            <p className="text-2xl font-bold">{formatAmount(entry?.amount - entry?.paidAmount)}</p>
+                                            <p className="text-2xl font-bold">{formatAmount(currentEntry?.amount - currentEntry?.paidAmount)}</p>
                                         </CardContent>
                                     </Card>
                                 </div>
@@ -363,7 +383,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
                                 <div className="mt-4">
                                     <h4 className="text-sm font-semibold mb-2">Payment History</h4>
                                     <div className="space-y-2">
-                                        {entry.payments?.map((payment) => (
+                                        {currentEntry?.payments?.map((payment) => (
                                             <div
                                                 key={payment._id}
                                                 className="text-sm flex justify-between items-center bg-muted/50 p-2 rounded group"

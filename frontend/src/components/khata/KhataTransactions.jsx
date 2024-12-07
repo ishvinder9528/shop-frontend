@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import KhataEntryDialog from './KhataEntryDialog';
 import { ChevronDown, ChevronUp, ArrowUp } from 'lucide-react';
 
-const KhataTransactions = ({ entries }) => {
+const KhataTransactions = ({ entries, onRefresh }) => {
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [showAll, setShowAll] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -141,7 +141,7 @@ const KhataTransactions = ({ entries }) => {
         entry={selectedEntry}
         open={!!selectedEntry}
         onClose={() => setSelectedEntry(null)}
-        onRefresh={() => {}}
+        onRefresh={onRefresh}
       />
 
       {showScrollTop && (

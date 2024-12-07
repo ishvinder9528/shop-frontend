@@ -40,13 +40,13 @@ export const GetKhataEntriesCntrl = async (req, res) => {
 export const UpdateKhataPaymentCntrl = async (req, res) => {
     try {
         const { action, ...paymentData } = req.body;
-        const entry = await UpdateKhataPaymentService(
+        const updatedEntry = await UpdateKhataPaymentService(
             req.params.id, 
             req.user._id,
             paymentData,
             action
         );
-        res.status(200).json(entry);
+        res.status(200).json(updatedEntry);
     } catch (error) {
         logger.error('Error updating khata payment:', error);
         res.status(400).json({ message: error.message });
@@ -75,12 +75,12 @@ export const GetKhataSummaryCntrl = async (req, res) => {
 
 export const UpdateKhataEntryCntrl = async (req, res) => {
     try {
-        const entry = await UpdateKhataEntryService(
+        const updatedEntry = await UpdateKhataEntryService(
             req.params.id,
             req.user._id,
             req.body
         );
-        res.status(200).json(entry);
+        res.status(200).json(updatedEntry);
     } catch (error) {
         logger.error('Error updating khata entry:', error);
         res.status(400).json({ message: error.message });
