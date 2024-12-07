@@ -71,4 +71,47 @@ export const DeleteKhataEntryService = async (entryId, userId) => {
         logger.error('Error in DeleteKhataEntryService:', error);
         throw error;
     }
+};
+
+export const GetKhataSummaryService = async (userId) => {
+    try {
+        const [totalResults, completedResults] = await Promise.all([
+            // Get total amounts
+            Khata.aggregate([
+                { $match: { userId: userId } },
+                {
+                    $group: {
+                        _id: null,
+                        totalCredit: { $sum: '$amount' },
+                        totalReceived: { $sum: '$paidAmount' }
+                    }
+                }
+            ]),
+            // Get counts by status
+            Khata.aggregate([
+                { $match: { userId: userId } },
+                {
+                    $group: {
+                        _id: '$status',
+                        count: { $sum: 1 }
+                    }
+                }
+            ])
+        ]);
+
+        const summary = {
+            totalCredit: totalResults[0]?.totalCredit || 0,
+            totalReceived: totalResults[0]?.totalReceived || 0,
+            pendingAmount: (totalResults[0]?.totalCredit || 0) - (totalResults[0]?.totalReceived || 0),
+            statusCounts: completedResults.reduce((acc, curr) => {
+                acc[curr._id.toLowerCase()] = curr.count;
+                return acc;
+            }, { pending: 0, completed: 0 })
+        };
+
+        return summary;
+    } catch (error) {
+        logger.error('Error in GetKhataSummaryService:', error);
+        throw error;
+    }
 }; 

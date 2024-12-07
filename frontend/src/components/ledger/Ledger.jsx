@@ -15,16 +15,13 @@ import BalanceSummary from './BalanceSummary';
 import RecentTransactions from './RecentTransactions';
 import SpendingChart from './SpendingChart';
 import BudgetOverview from './BudgetOverview';
-import KhataEntryForm from './KhataEntryForm';
-import KhataOverview from './KhataOverview';
+
 
 const Ledger = () => {
   const [entries, setEntries] = useState([]);
   const [summary, setSummary] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [selectedShop, setSelectedShop] = useState(null);
-  const [showKhataForm, setShowKhataForm] = useState(false);
-  const [khataEntries, setKhataEntries] = useState([]);
 
   useEffect(() => {
     fetchAllData();
@@ -33,14 +30,12 @@ const Ledger = () => {
   const fetchAllData = async () => {
     try {
       const filters = selectedShop ? { shopId: selectedShop } : {};
-      const [entriesData, summaryData, khataData] = await Promise.all([
+      const [entriesData, summaryData] = await Promise.all([
         getLedgerEntries(filters),
         getLedgerSummary(filters),
-        getKhataEntries(filters)
       ]);
       setEntries(entriesData);
       setSummary(summaryData);
-      setKhataEntries(khataData);
     } catch (error) {
       toast({
         title: "Error",
@@ -56,9 +51,6 @@ const Ledger = () => {
         <h1 className="text-2xl font-bold">Ledger</h1>
         <div className="space-x-4">
           <Button onClick={() => setShowForm(true)}>Add Entry</Button>
-          <Button onClick={() => setShowKhataForm(true)} variant="outline">
-            Add Khata Entry
-          </Button>
         </div>
       </div>
 
@@ -103,13 +95,6 @@ const Ledger = () => {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 gap-6">
-        <KhataOverview 
-          entries={khataEntries} 
-          onRefresh={fetchAllData}
-        />
-      </div>
-
       <LedgerEntryForm 
         open={showForm}
         onClose={() => setShowForm(false)}
@@ -119,14 +104,6 @@ const Ledger = () => {
         }}
       />
 
-      <KhataEntryForm
-        open={showKhataForm}
-        onClose={() => setShowKhataForm(false)}
-        onSuccess={() => {
-          setShowKhataForm(false);
-          fetchAllData();
-        }}
-      />
     </div>
   );
 };

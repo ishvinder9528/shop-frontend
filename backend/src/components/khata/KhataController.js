@@ -2,7 +2,8 @@ import {
     CreateKhataEntryService,
     GetKhataEntriesService,
     UpdateKhataPaymentService,
-    DeleteKhataEntryService
+    DeleteKhataEntryService,
+    GetKhataSummaryService
 } from './KhataService.js';
 import logger from '../../config/logger.js';
 
@@ -55,6 +56,16 @@ export const DeleteKhataEntryCntrl = async (req, res) => {
         res.status(200).json({ message: 'Khata entry deleted successfully' });
     } catch (error) {
         logger.error('Error deleting khata entry:', error);
+        res.status(400).json({ message: error.message });
+    }
+};
+
+export const GetKhataSummaryCntrl = async (req, res) => {
+    try {
+        const summary = await GetKhataSummaryService(req.user._id);
+        res.status(200).json(summary);
+    } catch (error) {
+        logger.error('Error fetching khata summary:', error);
         res.status(400).json({ message: error.message });
     }
 }; 

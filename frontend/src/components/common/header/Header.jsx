@@ -113,6 +113,12 @@ const Header = () => {
             >
               Ledger
             </Button>
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate('/khata')}
+            >
+              Khata
+            </Button>
           </nav>
         )}
       </div>

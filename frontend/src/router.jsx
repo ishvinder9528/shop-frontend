@@ -5,6 +5,7 @@ import CreateShop from "./components/create-shop";
 import Login from "./components/common/auth/Login";
 import Register from "./components/common/auth/Register";
 import Ledger from "./components/ledger/Ledger";
+import Khata from "./components/khata/Khata";
 const Router = createBrowserRouter([
     {
         path: '/',
@@ -29,6 +30,10 @@ const Router = createBrowserRouter([
             {
                 path: 'ledger',
                 element: <Ledger />
+            },
+            {
+                path: 'khata',
+                element: <Khata />
             }
         ],
     },
