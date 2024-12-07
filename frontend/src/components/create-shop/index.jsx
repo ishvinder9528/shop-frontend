@@ -45,11 +45,16 @@ const CreateShop = () => {
                 <div>
 
                     {loading ?
-                        <div className="flex text-center items-center  mt-[200px]">
-                            <TbLoaderQuarter className="h-10 w-full animate-spin"/>
+                        <div className="flex text-center items-center mt-[200px]">
+                            <TbLoaderQuarter className="h-10 w-full animate-spin" />
                         </div> :
                         shops.length == 0 ?
-                            <p>No Shops Available</p> :
+                            <div className="flex text-center items-center 
+                        justify-center
+                        my-[100px] ">
+                                <p>No Shops Available</p>
+                            </div>
+                            :
                             <ShopTable shops={shops} />
                     }
 

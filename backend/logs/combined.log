@@ -1,0 +1,9 @@
+{"level":"info","message":"Server is running on port 5000","service":"shop-service","timestamp":"2024-12-07 16:08:04"}
+{"duration":"4ms","ip":"::1","level":"info","message":"Request processed","method":"GET","service":"shop-service","status":404,"timestamp":"2024-12-07 16:08:10","url":"/api/shops","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"}
+{"level":"info","message":"Server is running on port 5000","service":"shop-service","timestamp":"2024-12-07 16:08:42"}
+{"level":"info","message":"Server is running on port 5000","service":"shop-service","timestamp":"2024-12-07 16:08:45"}
+{"level":"info","message":"Server is running on port 5000","service":"shop-service","timestamp":"2024-12-07 16:08:50"}
+{"level":"info","message":"Server is running on port 5000","service":"shop-service","timestamp":"2024-12-07 16:08:53"}
+{"duration":"1005ms","ip":"::1","level":"info","message":"Request processed","method":"GET","service":"shop-service","status":200,"timestamp":"2024-12-07 16:09:02","url":"/","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"}
+{"duration":"32ms","ip":"::1","level":"info","message":"Request processed","method":"GET","service":"shop-service","status":200,"timestamp":"2024-12-07 16:09:06","url":"/","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"}
+{"duration":"204ms","ip":"::1","level":"info","message":"Request processed","method":"GET","service":"shop-service","status":200,"timestamp":"2024-12-07 16:09:06","url":"/","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"}
