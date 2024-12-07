@@ -67,17 +67,19 @@ const ShopTable = ({ shops }) => {
                 </TableHeader>
                 <TableBody>
                     {paginatedShops.map((shop, index) => (
-                        <TableRow className="hover:cursor-pointer scale-95 hover:scale-100" key={index}>
+                        <TableRow className="hover:cursor-pointer  hover:bg-gray-200" key={index}>
                             <TableCell className="font-medium">{shop.name}</TableCell>
                             <TableCell>{shop.location}</TableCell>
                             <TableCell>{shop.phone}</TableCell>
                             <TableCell>{shop.gst}</TableCell>
-                            <TableCell className="flex justify-center items-center">
-                                <HoverCard open={openIndex === index} >
+                            <TableCell className="flex justify-center items-center relative">
+                                <HoverCard open={openIndex === index}>
                                     <HoverCardTrigger onClick={() => handleToggle(index)}>
                                         <IoInformationCircleSharp className="h-10 w-5 hover:scale-75" />
                                     </HoverCardTrigger>
-                                    <HoverCardContent>{shop.about}</HoverCardContent>
+                                    <HoverCardContent side="top" align="center" className="z-[9999]">
+                                        {shop.about}
+                                    </HoverCardContent>
                                 </HoverCard>
                             </TableCell>
                         </TableRow>
