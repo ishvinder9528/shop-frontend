@@ -25,6 +25,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '../../ui/avatar';
 
 import { UserContext } from '../../../context/userContext'
 import { useNavigate } from "react-router";
+import { createOrUpdateUser } from '../../../services/userService';
 
 const Header = () => {
   const navigate = useNavigate()
@@ -51,16 +52,33 @@ const Header = () => {
   });
 
   const getUserProfile = async (token) => {
-    await axios.get(` https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=` + token.access_token, {
-      headers: {
-        'Authorization': 'Bearer ' + token.access_token, 'Content-Type': 'application/json'
-      }
-    }).then((response) => {
-      localStorage.setItem("user", JSON.stringify(response.data))
+    try {
+      const response = await axios.get(
+        `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token.access_token}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token.access_token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      const userData = {
+        ...response.data,
+        googleId: response.data.id
+      };
+
+      // Create or update user in our database
+      await createOrUpdateUser(userData);
+      
+      localStorage.setItem("user", JSON.stringify(userData));
       setOpenDailog(false);
-      setUser(JSON.parse(localStorage.getItem('user')))
-    })
-  }
+      setUser(userData);
+    } catch (error) {
+      console.error("Error in user profile:", error);
+      alert('Failed to get user profile. Please try again.');
+    }
+  };
 
   // Get initials from user name
   const getInitials = (name) => {

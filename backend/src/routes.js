@@ -1,8 +1,10 @@
 import express from 'express';
-import ShopRoutes from './shop/routes.js';
+import shopRoutes from './components/shop/routes.js';
+import userRoutes from './components/user/routes.js';
 
 const router = express.Router();
 
-router.use('/shops', ShopRoutes);
+router.use('/shops', shopRoutes);
+router.use('/users', userRoutes);
 
 export default router; 

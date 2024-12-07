@@ -1,5 +1,5 @@
 import { GetShopDataService, GetShopByIdService, CreateShopService, DeleteShopService } from "./ShopService.js";
-import logger from '../config/logger.js';
+import logger from '../../config/logger.js';
 
 export const GetShopDataCntrl = async (req, res) => {
     try {
