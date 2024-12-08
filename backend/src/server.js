@@ -16,7 +16,9 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.NODE_ENV === 'production' 
+        ? process.env.FRONTEND_URL 
+        : 'http://localhost:5173',
     credentials: true
 }));
 app.use(express.json());
@@ -27,6 +29,13 @@ app.use('/api', router);
 app.get('/', (req, res) => {
     return res.status(200).json({
         message: 'Server is running'
+    });
+});
+
+app.get('/health', (req, res) => {
+    res.status(200).json({
+        status: 'healthy',
+        timestamp: new Date().toISOString()
     });
 });
 
