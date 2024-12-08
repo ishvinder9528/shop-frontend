@@ -16,7 +16,8 @@ const app = express();
 
 // Middleware
 const allowedOrigins = [
-    'https://s-handler.vercel.app',
+    'https://shop-handler.vercel.app',
+    'https://s-handler-pa6clax6t-ishvinder9528s-projects.vercel.app',
     'http://localhost:5173'
 ];
 
