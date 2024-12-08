@@ -24,6 +24,11 @@ app.use(requestLogger);
 
 // Routes
 app.use('/api', router);
+app.get('/', (req, res) => {
+    return res.status(200).json({
+        message: 'Server is running'
+    });
+});
 
 const PORT = process.env.PORT || 5000;
 
