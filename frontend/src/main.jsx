@@ -10,7 +10,12 @@ import { Toaster } from "@/components/ui/toaster";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <UserProvider>
-      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID}>
+      <GoogleOAuthProvider 
+          clientId={import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID}
+          onScriptLoadError={(error) => {
+              console.error('Google Script Load Error:', error);
+          }}
+      >
         <RouterProvider router={router} />
         <Toaster />
       </GoogleOAuthProvider>
