@@ -51,6 +51,9 @@ const Register = () => {
             console.log("Google Registration Failed:", error);
             alert('Google Registration Failed. Please try again.');
         },
+        flow: 'implicit',
+        ux_mode: 'redirect',
+        redirect_uri: window.location.origin + '/login',
     });
 
     return (

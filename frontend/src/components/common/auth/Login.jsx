@@ -59,6 +59,9 @@ const Login = () => {
             console.log("Google Login Failed:", error);
             alert('Google Login Failed. Please try again.');
         },
+        flow: 'implicit',
+        ux_mode: 'redirect',
+        redirect_uri: window.location.origin + '/login',
     });
 
     return (
