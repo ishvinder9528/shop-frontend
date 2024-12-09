@@ -7,11 +7,11 @@ import { CREATE_SHOP } from "../services";
 const Form = () => {
   const [shopFormVisibile, setShopFormVisibile] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    location: "",
-    gst: "",
-    phone: "",
-    about: ""
+    name: null,
+    location: null,
+    gst: null,
+    phone: null,
+    about: null
   });
   const [loading, setLoading] = useState(false);
 
@@ -35,11 +35,11 @@ const Form = () => {
       await CREATE_SHOP(formData);
       // Reset form
       setFormData({
-        name: "",
-        location: "",
-        gst: "",
-        phone: "",
-        about: ""
+        name: null,
+        location: null,
+        gst: null,
+        phone: null,
+        about: null
       });
       // Optionally refresh the shop list
       window.location.reload();

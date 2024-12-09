@@ -15,6 +15,14 @@ const shopSchema = new mongoose.Schema({
     timestamps: true
 });
 
+// Pre-save hook to convert empty gst strings to null
+shopSchema.pre('save', function(next) {
+    if (this.gst === '') {
+        this.gst = null;
+    }
+    next();
+});
+
 const Shop = mongoose.model('Shop', shopSchema);
 
 export default Shop;
