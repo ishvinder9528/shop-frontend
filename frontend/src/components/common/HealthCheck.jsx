@@ -3,16 +3,16 @@ import Loading from './Loading';
 
 const HealthCheck = () => {
     const [loading, setLoading] = useState(false);
-    let pollingInterval = 20000; // Start with 20 seconds
-    const maxInterval = 60000; // Cap at 1 minute
-    const activityTimeout = 60000; // 1 minute
+    let pollingInterval = 35000; // Start with 35 seconds
+    const maxInterval = 300000; // Cap at 5 minutes
+    const activityTimeout = 300000; // 5 minutes
     let pollingTimer, activityTimer;
 
     const checkHealth = async () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_HOST}/health`);
             console.log("response", response);
-            
+
             if (response.ok) {
                 console.log("Backend is up!");
                 setLoading(false); // Hide loading if it was displayed
