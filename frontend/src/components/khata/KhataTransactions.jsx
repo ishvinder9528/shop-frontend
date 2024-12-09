@@ -36,7 +36,7 @@ const KhataTransactions = ({ entries, onRefresh }) => {
   };
 
   const formatDateTime = (date) => {
-    return format(new Date(date), 'dd MMM yyyy, hh:mm a');
+    return format(new Date(date), 'dd MMM yyyy, HH:mm');
   };
 
   // Get all transactions including payments

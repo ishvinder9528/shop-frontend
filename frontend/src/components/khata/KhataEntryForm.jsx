@@ -14,7 +14,7 @@ const KhataEntryForm = ({ open, onClose, onSuccess }) => {
     buyerName: '',
     amount: '',
     description: '',
-    date: format(new Date(), 'yyyy-MM-dd'),
+    date: format(new Date(), 'yyyy-MM-dd '),
   });
 
   const handleSubmit = async (e) => {
@@ -24,6 +24,12 @@ const KhataEntryForm = ({ open, onClose, onSuccess }) => {
       await createKhataEntry({
         ...formData,
         amount: parseFloat(formData.amount),
+      });
+      setFormData({
+        buyerName: '',
+        amount: '',
+        description: '',
+        date: format(new Date(), 'yyyy-MM-dd HH:mm'),
       });
       toast({
         title: "Success",

@@ -73,6 +73,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
             setIsEditing(false);
             setSelectedPayment(null);
         }
+        setPaymentDate(format(new Date(), 'yyyy-MM-dd HH:mm'));
     }, [open]);
 
     const formatAmount = (amount) => {
