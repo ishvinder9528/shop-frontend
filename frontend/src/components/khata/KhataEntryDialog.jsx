@@ -44,7 +44,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
     const [showPaymentDeleteAlert, setShowPaymentDeleteAlert] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState(null);
     const [paymentAmount, setPaymentAmount] = useState('');
-    const [paymentDate, setPaymentDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+    const [paymentDate, setPaymentDate] = useState(format(new Date(), 'yyyy-MM-dd HH:mm'));
     const [editingPayment, setEditingPayment] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editForm, setEditForm] = useState({
@@ -68,7 +68,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
     useEffect(() => {
         if (!open) {
             setPaymentAmount('');
-            setPaymentDate(format(new Date(), 'yyyy-MM-dd'));
+            setPaymentDate(format(new Date(), 'yyyy-MM-dd HH:mm'));
             setEditingPayment(null);
             setIsEditing(false);
             setSelectedPayment(null);
@@ -84,7 +84,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
     };
 
     const formatDateTime = (date) => {
-        return format(new Date(date), 'dd MMM yyyy, hh:mm a');
+        return format(new Date(date), 'dd MMM yyyy, HH:mm');
     };
 
     const handlePayment = async () => {
@@ -120,7 +120,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
                 description: `Payment ${editingPayment ? 'updated' : 'recorded'} successfully`,
             });
             setPaymentAmount('');
-            setPaymentDate(format(new Date(), 'yyyy-MM-dd'));
+            setPaymentDate(format(new Date(), 'yyyy-MM-dd HH:mm'));
             setEditingPayment(null);
             await onRefresh();
         } catch (error) {
@@ -137,7 +137,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
     const handleEditPayment = (payment) => {
         setEditingPayment(payment);
         setPaymentAmount(payment.amount.toString());
-        setPaymentDate(format(new Date(payment.date), 'yyyy-MM-dd'));
+        setPaymentDate(format(new Date(payment.date), 'yyyy-MM-dd HH:mm'));
     };
 
     const handleDeletePayment = async () => {
@@ -358,7 +358,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
                                 <div className="space-y-2">
                                     <Label>Payment Date</Label>
                                     <Input
-                                        type="date"
+                                        type="datetime-local"
                                         value={paymentDate}
                                         onChange={(e) => setPaymentDate(e.target.value)}
                                     />
@@ -389,7 +389,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
                                         onClick={() => {
                                             setEditingPayment(null);
                                             setPaymentAmount('');
-                                            setPaymentDate(format(new Date(), 'yyyy-MM-dd'));
+                                            setPaymentDate(format(new Date(), 'yyyy-MM-dd HH:mm'));
                                         }}
                                     >
                                         Cancel Edit
