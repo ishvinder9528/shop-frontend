@@ -275,7 +275,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
                                                 disabled={loading}
                                             >
                                                 <ChevronLeft className="h-4 w-4" />
-                                               
+
                                             </Button>
                                             <Button
                                                 size="icon"
@@ -301,7 +301,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
                     </DialogHeader>
 
                     {!isEditing && (
-                        <Tabs defaultValue="details" className="mt-4">
+                        <Tabs defaultValue="details" className="mt-1">
                             <TabsList className="grid w-full grid-cols-2">
                                 <TabsTrigger value="details">Details</TabsTrigger>
                                 <TabsTrigger value="payments">Payments</TabsTrigger>
@@ -339,6 +339,22 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
                             </TabsContent>
 
                             <TabsContent value="payments" className="space-y-4">
+
+                                <div className='space-y-2'>
+                                    <div className='flex justify-between '>
+                                        <p className='text-xs font-semibold text-gray-500'>Total Amount</p>
+                                        <p className='text-xs font-semibold text-gray-500'>{formatAmount(currentEntry?.amount)}</p>
+                                    </div>
+                                    <div className='flex justify-between'>
+                                        <p className='text-xs font-semibold text-gray-500'>Remaining</p>
+                                        <p className='text-xs font-semibold text-gray-500'>{formatAmount(currentEntry?.amount - currentEntry?.paidAmount)}</p>
+                                    </div>
+                                    <div className='flex justify-between'>
+                                        <p className='text-sm font-semibold text-gray-500'>Paid Amount</p>
+                                        <p className='text-sm font-semibold text-gray-500'>{formatAmount(currentEntry?.paidAmount)}</p>
+                                    </div>
+                                </div>
+
                                 <div className="space-y-2">
                                     <Label>Payment Date</Label>
                                     <Input
@@ -383,7 +399,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
                                 <div className="mt-4">
                                     <h4 className="text-sm font-semibold mb-2">Payment History</h4>
                                     <div className="space-y-2">
-                                        {currentEntry?.payments?.map((payment) => (
+                                        {currentEntry?.payments?.length > 0 ? currentEntry?.payments?.map((payment) => (
                                             <div
                                                 key={payment._id}
                                                 className="text-sm flex justify-between items-center bg-muted/50 p-2 rounded group"
@@ -418,7 +434,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                             </div>
-                                        ))}
+                                        )) : <div className='text-sm font-semibold text-gray-500 text-center'>No payments yet</div>}
                                     </div>
                                 </div>
                             </TabsContent>

@@ -58,7 +58,7 @@ const KhataOverview = ({ entries, onRefresh }) => {
         
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[400px] ">
+        <ScrollArea className="h-[502px] ">
           <div className="space-y-4">
             {filteredEntries.length > 0 ? (
               filteredEntries.map((entry) => (
