@@ -12,9 +12,11 @@ const Khata = () => {
     const [entries, setEntries] = useState([]);
     const [summary, setSummary] = useState(null);
     const [showEntryForm, setShowEntryForm] = useState(false);
+    const [loading, setLoading] = useState(false);
     const { toast } = useToast();
 
     const fetchData = async () => {
+        setLoading(true);
         try {
             const [entriesData, summaryData] = await Promise.all([
                 getKhataEntries(),
@@ -30,6 +32,8 @@ const Khata = () => {
                 variant: "destructive",
             });
             setEntries([]);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -42,7 +46,7 @@ const Khata = () => {
             <div className="space-y-6">
                 <div className="flex justify-between items-center">
                     <h1 className="text-3xl font-bold">Khata Book</h1>
-                    <Button onClick={() => setShowEntryForm(true)}>
+                    <Button onClick={() => setShowEntryForm(true)} loading={loading}>
                         Add New Entry
                     </Button>
                 </div>
