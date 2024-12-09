@@ -37,7 +37,11 @@ const userSchema = new mongoose.Schema({
     lastLogin: { 
         type: Date, 
         default: Date.now 
-    }
+    },
+    budget: {
+        type: Number,
+        default: 100000,
+    },
 }, {
     timestamps: true,
     versionKey: false

@@ -48,8 +48,6 @@ export const DeleteUserCntrl = async (req, res) => {
     }
 }; 
 
-
-
 export const LoginUserCntrl = async (req, res) => {
     try {
         const { email, password } = req.body;
