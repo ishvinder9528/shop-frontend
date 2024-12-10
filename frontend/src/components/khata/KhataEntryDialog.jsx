@@ -35,7 +35,8 @@ import {
     CardHeader,
     CardTitle,
     CardContent,
-} from "@/components/ui/card";
+} from "@/components/ui/card";  
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
     const { toast } = useToast();
@@ -420,53 +421,55 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
 
                                 <div className="mt-4">
                                     <h4 className="text-sm font-semibold mb-2">Payment History</h4>
-                                    <div className="space-y-2">
-                                        {currentEntry?.payments?.length > 0 ? currentEntry?.payments?.map((payment) => (
-                                            <div className="bg-muted/50 p-2 rounded group">
-                                                <div className="flex justify-between items-center">
-                                                    <div key={payment._id} className="text-sm">
-                                                        <div className="flex flex-col justify-start ">
-                                                            <div>{formatDateTime(payment.date)}</div>
-                                                            {payment.description && (
-                                                                <div className="text-xs text-gray-500">
-                                                                    Description: {payment.description}
-                                                                </div>
-                                                            )}
+                                    <ScrollArea className="h-[200px]">
+                                        <div className="space-y-2">
+                                            {currentEntry?.payments?.length > 0 ? currentEntry?.payments?.map((payment) => (
+                                                <div className="bg-muted/50 p-2 rounded group">
+                                                    <div className="flex justify-between items-center">
+                                                        <div key={payment._id} className="text-sm">
+                                                            <div className="flex flex-col justify-start ">
+                                                                <div>{formatDateTime(payment.date)}</div>
+                                                                {payment.description && (
+                                                                    <div className="text-xs text-gray-500">
+                                                                        Description: {payment.description}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center space-x-4">
+                                                            <div className="font-medium">{formatAmount(payment.amount)}</div>
+                                                            <DropdownMenu>
+                                                                <DropdownMenuTrigger asChild>
+                                                                    <Button
+                                                                        variant="ghost"
+                                                                        size="icon"
+                                                                        className="opacity-0 group-hover:opacity-100"
+                                                                    >
+                                                                        <MoreVertical className="h-4 w-4" />
+                                                                    </Button>
+                                                                </DropdownMenuTrigger>
+                                                                <DropdownMenuContent align="end">
+                                                                    <DropdownMenuItem onClick={() => handleEditPayment(payment)}>
+                                                                        Edit Payment
+                                                                    </DropdownMenuItem>
+                                                                    <DropdownMenuItem
+                                                                        className="text-red-600"
+                                                                        onClick={() => {
+                                                                            setSelectedPayment(payment);
+                                                                            setShowPaymentDeleteAlert(true);
+                                                                        }}
+                                                                    >
+                                                                        Delete Payment
+                                                                    </DropdownMenuItem>
+                                                                </DropdownMenuContent>
+                                                            </DropdownMenu>
                                                         </div>
                                                     </div>
-                                                    <div className="flex items-center space-x-4">
-                                                        <div className="font-medium">{formatAmount(payment.amount)}</div>
-                                                        <DropdownMenu>
-                                                            <DropdownMenuTrigger asChild>
-                                                                <Button
-                                                                    variant="ghost"
-                                                                    size="icon"
-                                                                    className="opacity-0 group-hover:opacity-100"
-                                                                >
-                                                                    <MoreVertical className="h-4 w-4" />
-                                                                </Button>
-                                                            </DropdownMenuTrigger>
-                                                            <DropdownMenuContent align="end">
-                                                                <DropdownMenuItem onClick={() => handleEditPayment(payment)}>
-                                                                    Edit Payment
-                                                                </DropdownMenuItem>
-                                                                <DropdownMenuItem
-                                                                    className="text-red-600"
-                                                                    onClick={() => {
-                                                                        setSelectedPayment(payment);
-                                                                        setShowPaymentDeleteAlert(true);
-                                                                    }}
-                                                                >
-                                                                    Delete Payment
-                                                                </DropdownMenuItem>
-                                                            </DropdownMenuContent>
-                                                        </DropdownMenu>
-                                                    </div>
                                                 </div>
-                                            </div>
 
-                                        )) : <div className='text-sm font-semibold text-gray-500 text-center'>No payments yet</div>}
-                                    </div>
+                                            )) : <div className='text-sm font-semibold text-gray-500 text-center'>No payments yet</div>}
+                                        </div>
+                                    </ScrollArea>
                                 </div>
                             </TabsContent>
                         </Tabs>
