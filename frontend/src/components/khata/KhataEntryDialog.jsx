@@ -45,6 +45,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
     const [selectedPayment, setSelectedPayment] = useState(null);
     const [paymentAmount, setPaymentAmount] = useState('');
     const [paymentDate, setPaymentDate] = useState(format(new Date(), 'yyyy-MM-dd HH:mm'));
+    const [paymentDescription, setPaymentDescription] = useState('');
     const [editingPayment, setEditingPayment] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editForm, setEditForm] = useState({
@@ -69,6 +70,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
         if (!open) {
             setPaymentAmount('');
             setPaymentDate(format(new Date(), 'yyyy-MM-dd HH:mm'));
+            setPaymentDescription('');
             setEditingPayment(null);
             setIsEditing(false);
             setSelectedPayment(null);
@@ -103,15 +105,20 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
         try {
             let updatedEntry;
             if (editingPayment) {
+                console.log("description", paymentDescription);
+
                 updatedEntry = await updateKhataPayment(currentEntry._id, {
                     paymentId: editingPayment._id,
                     amount,
-                    date: new Date(paymentDate)
+                    date: new Date(paymentDate),
+                    description: paymentDescription
                 }, 'edit');
             } else {
+                console.log("description", paymentDescription);
                 updatedEntry = await updateKhataPayment(currentEntry._id, {
                     amount,
-                    date: new Date(paymentDate)
+                    date: new Date(paymentDate),
+                    description: paymentDescription
                 }, 'add');
             }
 
@@ -122,6 +129,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
             });
             setPaymentAmount('');
             setPaymentDate(format(new Date(), 'yyyy-MM-dd HH:mm'));
+            setPaymentDescription('');
             setEditingPayment(null);
             await onRefresh();
         } catch (error) {
@@ -139,6 +147,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
         setEditingPayment(payment);
         setPaymentAmount(payment.amount.toString());
         setPaymentDate(format(new Date(payment.date), 'yyyy-MM-dd HH:mm'));
+        setPaymentDescription(payment.description || '');
     };
 
     const handleDeletePayment = async () => {
@@ -371,16 +380,27 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
                                             type="number"
                                             min="0"
                                             step="0.01"
-                                            placeholder="Enter payment amount"
+                                            placeholder="Enter payment amount; eg:- 100"
                                             value={paymentAmount}
                                             onChange={(e) => setPaymentAmount(e.target.value)}
                                         />
-                                        <Button
-                                            disabled={loading}
-                                            onClick={handlePayment}
-                                        >
-                                            {editingPayment ? 'Update' : 'Pay'}
-                                        </Button>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Payment Description</Label>
+                                        <div className='flex  gap-2'>
+
+                                            <Input
+                                                placeholder="Enter payment description"
+                                                value={paymentDescription}
+                                                onChange={(e) => setPaymentDescription(e.target.value)}
+                                            />
+                                            <Button
+                                                disabled={loading}
+                                                onClick={handlePayment}
+                                            >
+                                                {editingPayment ? 'Update' : 'Pay'}
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
                                 {editingPayment && (
@@ -391,6 +411,7 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
                                             setEditingPayment(null);
                                             setPaymentAmount('');
                                             setPaymentDate(format(new Date(), 'yyyy-MM-dd HH:mm'));
+                                            setPaymentDescription('');
                                         }}
                                     >
                                         Cancel Edit
@@ -401,40 +422,49 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
                                     <h4 className="text-sm font-semibold mb-2">Payment History</h4>
                                     <div className="space-y-2">
                                         {currentEntry?.payments?.length > 0 ? currentEntry?.payments?.map((payment) => (
-                                            <div
-                                                key={payment._id}
-                                                className="text-sm flex justify-between items-center bg-muted/50 p-2 rounded group"
-                                            >
-                                                <div className="flex items-center  gap-32">
-                                                    <div>{formatDateTime(payment.date)}</div>
-                                                    <div className="font-medium">{formatAmount(payment.amount)}</div>
+                                            <div className="bg-muted/50 p-2 rounded group">
+                                                <div className="flex justify-between items-center">
+                                                    <div key={payment._id} className="text-sm">
+                                                        <div className="flex flex-col justify-start ">
+                                                            <div>{formatDateTime(payment.date)}</div>
+                                                            {payment.description && (
+                                                                <div className="text-xs text-gray-500">
+                                                                    Description: {payment.description}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center space-x-4">
+                                                        <div className="font-medium">{formatAmount(payment.amount)}</div>
+                                                        <DropdownMenu>
+                                                            <DropdownMenuTrigger asChild>
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="icon"
+                                                                    className="opacity-0 group-hover:opacity-100"
+                                                                >
+                                                                    <MoreVertical className="h-4 w-4" />
+                                                                </Button>
+                                                            </DropdownMenuTrigger>
+                                                            <DropdownMenuContent align="end">
+                                                                <DropdownMenuItem onClick={() => handleEditPayment(payment)}>
+                                                                    Edit Payment
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem
+                                                                    className="text-red-600"
+                                                                    onClick={() => {
+                                                                        setSelectedPayment(payment);
+                                                                        setShowPaymentDeleteAlert(true);
+                                                                    }}
+                                                                >
+                                                                    Delete Payment
+                                                                </DropdownMenuItem>
+                                                            </DropdownMenuContent>
+                                                        </DropdownMenu>
+                                                    </div>
                                                 </div>
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            className="opacity-0 group-hover:opacity-100"
-                                                        >
-                                                            <MoreVertical className="h-4 w-4" />
-                                                        </Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem onClick={() => handleEditPayment(payment)}>
-                                                            Edit Payment
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            className="text-red-600"
-                                                            onClick={() => {
-                                                                setSelectedPayment(payment);
-                                                                setShowPaymentDeleteAlert(true);
-                                                            }}
-                                                        >
-                                                            Delete Payment
-                                                        </DropdownMenuItem>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
                                             </div>
+
                                         )) : <div className='text-sm font-semibold text-gray-500 text-center'>No payments yet</div>}
                                     </div>
                                 </div>

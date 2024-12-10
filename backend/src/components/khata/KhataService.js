@@ -41,7 +41,8 @@ export const UpdateKhataPaymentService = async (entryId, userId, paymentData, ac
             case 'add':
                 entry.payments.push({
                     amount: paymentData.amount,
-                    date: paymentData.date
+                    date: paymentData.date,
+                    description: paymentData.description
                 });
                 entry.paidAmount += paymentData.amount;
                 break;
@@ -54,6 +55,7 @@ export const UpdateKhataPaymentService = async (entryId, userId, paymentData, ac
                 oldAmount = payment.amount;
                 payment.amount = paymentData.amount;
                 payment.date = paymentData.date;
+                payment.description = paymentData.description;
                 entry.paidAmount = entry.paidAmount - oldAmount + paymentData.amount;
                 break;
 
