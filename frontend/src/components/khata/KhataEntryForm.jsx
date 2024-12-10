@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,15 @@ const KhataEntryForm = ({ open, onClose, onSuccess }) => {
     description: '',
     date: format(new Date(), 'yyyy-MM-dd\'T\'HH:mm'),
   });
+
+  useEffect(() => {
+    if (open) {
+      setFormData(prev => ({
+        ...prev,
+        date: format(new Date(), 'yyyy-MM-dd\'T\'HH:mm')
+      }));
+    }
+  }, [open]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

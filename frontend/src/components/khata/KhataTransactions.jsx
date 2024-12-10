@@ -36,7 +36,12 @@ const KhataTransactions = ({ entries, onRefresh }) => {
   };
 
   const formatDateTime = (date) => {
-    return format(new Date(date), 'dd MMM yyyy, HH:mm');
+    try {
+      return format(new Date(date), 'dd MMM yyyy, HH:mm');
+    } catch (error) {
+      console.error("Invalid date format:", date, error);
+      return "Invalid Date";
+    }
   };
 
   // Get all transactions including payments
@@ -47,7 +52,9 @@ const KhataTransactions = ({ entries, onRefresh }) => {
       transactions.push({
         ...entry,
         type: 'entry',
-        date: entry.createdAt
+        // change date to ISO format
+        date: format(new Date(entry.createdAt), 'yyyy-MM-dd\'T\'HH:mm:00.000'),
+        createdAt: entry.createdAt
       });
       
       // Add all payments for this entry
@@ -61,15 +68,19 @@ const KhataTransactions = ({ entries, onRefresh }) => {
       });
     });
 
+    console.log("transactions", transactions);
     // Sort by date, and then by creation time if dates are equal
     return transactions.sort((a, b) => {
-      const dateComparison = new Date(b.date) - new Date(a.date);
+      const dateComparison = new Date(b.date) - new Date(a.date)
+      console.log("dateComparison", dateComparison);
+      
       if (dateComparison !== 0) return dateComparison;
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
   };
 
   const transactions = getAllTransactions();
+  console.log("sortedtransactions", transactions);
   const displayTransactions = showAll ? transactions : transactions.slice(0, 5);
 
   return (
