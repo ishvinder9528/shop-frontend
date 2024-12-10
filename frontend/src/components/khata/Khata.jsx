@@ -42,48 +42,39 @@ const Khata = () => {
     }, []);
 
     return (
-        <div className='container mx-auto py-6'>
-            <div className="space-y-6">
-                <div className="flex justify-between items-center">
-                    <h1 className="text-3xl font-bold">Khata Book</h1>
-                    <Button onClick={() => setShowEntryForm(true)} loading={loading}>
-                        Add New Entry
-                    </Button>
-                </div>
+        <div className="container md:mx-auto p-4 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <KhataSummary summary={summary} />
+            </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <KhataSummary summary={summary} />
-                </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Recent Transactions</CardTitle>
+                        <CardDescription>Latest khata activities and payments</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <KhataTransactions 
+                            entries={entries} 
+                            onRefresh={fetchData}
+                        />
+                    </CardContent>
+                </Card>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Recent Transactions</CardTitle>
-                            <CardDescription>Latest khata activities and payments</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <KhataTransactions 
-                                entries={entries} 
-                                onRefresh={fetchData}
-                            />
-                        </CardContent>
-                    </Card>
-
-                    <KhataOverview
-                        entries={entries}
-                        onRefresh={fetchData}
-                    />
-                </div>
-
-                <KhataEntryForm
-                    open={showEntryForm}
-                    onClose={() => setShowEntryForm(false)}
-                    onSuccess={() => {
-                        setShowEntryForm(false);
-                        fetchData();
-                    }}
+                <KhataOverview
+                    entries={entries}
+                    onRefresh={fetchData}
                 />
             </div>
+
+            <KhataEntryForm
+                open={showEntryForm}
+                onClose={() => setShowEntryForm(false)}
+                onSuccess={() => {
+                    setShowEntryForm(false);
+                    fetchData();
+                }}
+            />
         </div>
     );
 };

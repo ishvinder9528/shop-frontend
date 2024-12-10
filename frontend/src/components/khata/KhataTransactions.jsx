@@ -73,7 +73,7 @@ const KhataTransactions = ({ entries, onRefresh }) => {
       {displayTransactions.map((transaction) => (
         <div 
           key={transaction._id} 
-          className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 cursor-pointer transition-colors"
+          className="flex flex-row md:flex-row  justify-between p-4 border rounded-lg hover:bg-accent/50 cursor-pointer transition-colors"
           onClick={() => {
             if (transaction.type === 'entry') {
               setSelectedEntry(entries.find(e => e._id === transaction._id));
@@ -82,7 +82,7 @@ const KhataTransactions = ({ entries, onRefresh }) => {
             }
           }}
         >
-          <div>
+          <div className="flex-1">
             <h3 className="font-semibold">{transaction.buyerName}</h3>
             {transaction.type === 'entry' ? (
               <>

@@ -164,7 +164,37 @@ const Header = () => {
 
             {/* Dropdown for small screens */}
             <div className='flex sm:hidden items-center'>
-         
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Avatar className="h-[35px] w-[35px]">
+                      <AvatarImage 
+                        src={user?.picture} 
+                        alt={user?.name}
+                        onError={() => setImageError(true)}
+                      />
+                      <AvatarFallback className="bg-primary text-primary-foreground">
+                        {getInitials(user?.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => navigate('/')}>Shops</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/ledger')}>Ledger</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/khata')}>Khata</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      googleLogout();
+                      localStorage.clear();
+                      setUser(null);
+                      navigate('/');
+                    }}
+                  >
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </>
         ) : (

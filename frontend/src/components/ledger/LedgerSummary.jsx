@@ -18,7 +18,7 @@ const LedgerSummary = ({ summary }) => {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid  md:grid-cols-3 gap-4">
         <Card>
           <CardContent className="pt-6">
             <div className="text-sm font-medium">Income</div>
