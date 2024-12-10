@@ -14,7 +14,7 @@ const KhataEntryForm = ({ open, onClose, onSuccess }) => {
     buyerName: '',
     amount: '',
     description: '',
-    date: format(new Date(), 'yyyy-MM-dd '),
+    date: format(new Date(), 'yyyy-MM-dd\'T\'HH:mm'),
   });
 
   const handleSubmit = async (e) => {
@@ -29,7 +29,7 @@ const KhataEntryForm = ({ open, onClose, onSuccess }) => {
         buyerName: '',
         amount: '',
         description: '',
-        date: format(new Date(), 'yyyy-MM-dd HH:mm'),
+        date: format(new Date(), 'yyyy-MM-dd\'T\'HH:mm'),
       });
       toast({
         title: "Success",
@@ -90,7 +90,7 @@ const KhataEntryForm = ({ open, onClose, onSuccess }) => {
             <Label htmlFor="date">Date</Label>
             <Input
               id="date"
-              type="date"
+              type="datetime-local"
               required
               value={formData.date}
               onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}

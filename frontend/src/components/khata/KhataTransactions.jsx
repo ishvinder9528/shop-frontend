@@ -61,8 +61,12 @@ const KhataTransactions = ({ entries, onRefresh }) => {
       });
     });
 
-    // Sort by date, newest first
-    return transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // Sort by date, and then by creation time if dates are equal
+    return transactions.sort((a, b) => {
+      const dateComparison = new Date(b.date) - new Date(a.date);
+      if (dateComparison !== 0) return dateComparison;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
   };
 
   const transactions = getAllTransactions();
@@ -73,7 +77,7 @@ const KhataTransactions = ({ entries, onRefresh }) => {
       {displayTransactions.map((transaction) => (
         <div 
           key={transaction._id} 
-          className="flex flex-row md:flex-row  justify-between p-4 border rounded-lg hover:bg-accent/50 cursor-pointer transition-colors"
+          className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 cursor-pointer transition-colors"
           onClick={() => {
             if (transaction.type === 'entry') {
               setSelectedEntry(entries.find(e => e._id === transaction._id));
@@ -82,7 +86,7 @@ const KhataTransactions = ({ entries, onRefresh }) => {
             }
           }}
         >
-          <div className="flex-1">
+          <div>
             <h3 className="font-semibold">{transaction.buyerName}</h3>
             {transaction.type === 'entry' ? (
               <>

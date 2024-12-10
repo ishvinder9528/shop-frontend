@@ -220,94 +220,263 @@ const KhataEntryDialog = ({ entry, open, onClose, onRefresh }) => {
     if (!entry) return null;
 
     return (
-        <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="max-w-lg mx-auto">
-                <DialogHeader>
-                    <DialogTitle>Edit Khata Entry</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                    {isEditing ? (
-                        <div className="space-y-4 ">
-                            <div className='flex flex-col gap-2'>
-                                <Label>Buyer Name</Label>
-                                <Input
-                                    value={editForm.buyerName}
-                                    onChange={(e) => setEditForm(prev => ({ ...prev, buyerName: e.target.value }))}
-                                    className="font-semibold"
-                                    placeholder="Enter buyer name"
-                                />
+        <>
+            <Dialog open={open} onOpenChange={onClose}>
+                <DialogContent className="max-w-md">
+                    <DialogHeader>
+                        <div className="flex justify-between items-center">
+                            <div className="flex-1">
+                                {isEditing ? (
+                                    <div className="space-y-4 ">
+                                        <div className='flex flex-col gap-2'>
+                                            <Label>Buyer Name</Label>
+                                            <Input
+                                                value={editForm.buyerName}
+                                                onChange={(e) => setEditForm(prev => ({ ...prev, buyerName: e.target.value }))}
+                                                className="font-semibold"
+                                                placeholder="Enter buyer name"
+                                            />
+                                        </div>
+                                        <div className='flex flex-col gap-2'>
+                                            <Label>Description</Label>
+                                            <Input
+                                                value={editForm.description}
+                                                onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
+                                                placeholder="Enter description"
+                                            />
+                                        </div>
+                                        <div className='flex flex-col gap-2'>
+                                            <Label>Amount</Label>
+                                            <Input
+                                                type="number"
+                                                min="0"
+                                                step="0.01"
+                                                value={editForm.amount}
+                                                onChange={(e) => setEditForm(prev => ({ ...prev, amount: e.target.value }))}
+                                                placeholder="Enter amount"
+                                            />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <DialogTitle className="text-xl">{currentEntry?.buyerName}</DialogTitle>
+                                        <p className="text-sm text-muted-foreground mt-1">{currentEntry?.description}</p>
+                                    </div>
+                                )}
                             </div>
-                            <div className='flex flex-col gap-2'>
-                                <Label>Description</Label>
-                                <Input
-                                    value={editForm.description}
-                                    onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
-                                    placeholder="Enter description"
-                                />
-                            </div>
-                            <div className='flex flex-col gap-2'>
-                                <Label>Amount</Label>
-                                <Input
-                                    type="number"
-                                    min="0"
-                                    step="0.01"
-                                    value={editForm.amount}
-                                    onChange={(e) => setEditForm(prev => ({ ...prev, amount: e.target.value }))}
-                                    placeholder="Enter amount"
-                                />
+                            <div className="flex gap-2">
+                                {isEditing ? (
+                                    <>
+                                        <div className='ml-10 flex flex-col gap-5'>
+
+                                            <Button
+                                                size="icon"
+                                                variant="outline"
+                                                onClick={() => setIsEditing(false)}
+                                                disabled={loading}
+                                            >
+                                                <ChevronLeft className="h-4 w-4" />
+
+                                            </Button>
+                                            <Button
+                                                size="icon"
+                                                onClick={handleEdit}
+                                                disabled={loading}
+                                            >
+                                                <Save className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => setIsEditing(true)}
+                                        className='mr-5'
+                                    >
+                                        <Pencil className="h-4 w-4 " />
+                                    </Button>
+                                )}
                             </div>
                         </div>
-                    ) : (
-                        <div>
-                            <DialogTitle className="text-xl">{currentEntry?.buyerName}</DialogTitle>
-                            <p className="text-sm text-muted-foreground mt-1">{currentEntry?.description}</p>
-                        </div>
-                    )}
-                </div>
-                <div className="flex gap-2">
-                    {isEditing ? (
-                        <>
-                            <div className='ml-10 flex flex-col gap-5'>
+                    </DialogHeader>
 
-                                <Button
-                                    size="icon"
-                                    variant="outline"
-                                    onClick={() => setIsEditing(false)}
-                                    disabled={loading}
-                                >
-                                    <ChevronLeft className="h-4 w-4" />
+                    {!isEditing && (
+                        <Tabs defaultValue="details" className="mt-1">
+                            <TabsList className="grid w-full grid-cols-2">
+                                <TabsTrigger value="details">Details</TabsTrigger>
+                                <TabsTrigger value="payments">Payments</TabsTrigger>
+                            </TabsList>
 
-                                </Button>
-                                <Button
-                                    size="icon"
-                                    onClick={handleEdit}
-                                    disabled={loading}
-                                >
-                                    <Save className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        </>
-                    ) : (
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => setIsEditing(true)}
-                            className='mr-5'
-                        >
-                            <Pencil className="h-4 w-4 " />
-                        </Button>
+                            <TabsContent value="details" className="space-y-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <Card>
+                                        <CardHeader className="py-2">
+                                            <CardTitle className="text-sm">Total Amount</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <p className="text-2xl font-bold">{formatAmount(currentEntry?.amount)}</p>
+                                        </CardContent>
+                                    </Card>
+                                    <Card>
+                                        <CardHeader className="py-2">
+                                            <CardTitle className="text-sm">Remaining</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <p className="text-2xl font-bold">{formatAmount(currentEntry?.amount - currentEntry?.paidAmount)}</p>
+                                        </CardContent>
+                                    </Card>
+                                </div>
+                                <div className="flex justify-end">
+                                    <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => setShowDeleteAlert(true)}
+                                        disabled={loading}
+                                    >
+                                        Delete Entry
+                                    </Button>
+                                </div>
+                            </TabsContent>
+
+                            <TabsContent value="payments" className="space-y-4">
+
+                                <div className='space-y-2'>
+                                    <div className='flex justify-between '>
+                                        <p className='text-xs font-semibold text-gray-500'>Total Amount</p>
+                                        <p className='text-xs font-semibold text-gray-500'>{formatAmount(currentEntry?.amount)}</p>
+                                    </div>
+                                    <div className='flex justify-between'>
+                                        <p className='text-xs font-semibold text-gray-500'>Remaining</p>
+                                        <p className='text-xs font-semibold text-gray-500'>{formatAmount(currentEntry?.amount - currentEntry?.paidAmount)}</p>
+                                    </div>
+                                    <div className='flex justify-between'>
+                                        <p className='text-sm font-semibold text-gray-500'>Paid Amount</p>
+                                        <p className='text-sm font-semibold text-gray-500'>{formatAmount(currentEntry?.paidAmount)}</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label>Payment Date</Label>
+                                    <Input
+                                        type="datetime-local"
+                                        value={paymentDate}
+                                        onChange={(e) => setPaymentDate(e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Payment Amount</Label>
+                                    <div className="flex gap-2">
+                                        <Input
+                                            type="number"
+                                            min="0"
+                                            step="0.01"
+                                            placeholder="Enter payment amount"
+                                            value={paymentAmount}
+                                            onChange={(e) => setPaymentAmount(e.target.value)}
+                                        />
+                                        <Button
+                                            disabled={loading}
+                                            onClick={handlePayment}
+                                        >
+                                            {editingPayment ? 'Update' : 'Pay'}
+                                        </Button>
+                                    </div>
+                                </div>
+                                {editingPayment && (
+                                    <Button
+                                        variant="outline"
+                                        className="w-full"
+                                        onClick={() => {
+                                            setEditingPayment(null);
+                                            setPaymentAmount('');
+                                            setPaymentDate(format(new Date(), 'yyyy-MM-dd HH:mm'));
+                                        }}
+                                    >
+                                        Cancel Edit
+                                    </Button>
+                                )}
+
+                                <div className="mt-4">
+                                    <h4 className="text-sm font-semibold mb-2">Payment History</h4>
+                                    <div className="space-y-2">
+                                        {currentEntry?.payments?.length > 0 ? currentEntry?.payments?.map((payment) => (
+                                            <div
+                                                key={payment._id}
+                                                className="text-sm flex justify-between items-center bg-muted/50 p-2 rounded group"
+                                            >
+                                                <div className="flex items-center  gap-32">
+                                                    <div>{formatDateTime(payment.date)}</div>
+                                                    <div className="font-medium">{formatAmount(payment.amount)}</div>
+                                                </div>
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="opacity-0 group-hover:opacity-100"
+                                                        >
+                                                            <MoreVertical className="h-4 w-4" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end">
+                                                        <DropdownMenuItem onClick={() => handleEditPayment(payment)}>
+                                                            Edit Payment
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            className="text-red-600"
+                                                            onClick={() => {
+                                                                setSelectedPayment(payment);
+                                                                setShowPaymentDeleteAlert(true);
+                                                            }}
+                                                        >
+                                                            Delete Payment
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </div>
+                                        )) : <div className='text-sm font-semibold text-gray-500 text-center'>No payments yet</div>}
+                                    </div>
+                                </div>
+                            </TabsContent>
+                        </Tabs>
                     )}
-                </div>
-                <div className="space-y-4">
-                    <Input
-                        type="datetime-local"
-                        value={paymentDate}
-                        onChange={(e) => setPaymentDate(e.target.value)}
-                        className="w-full"
-                    />
-                </div>
-            </DialogContent>
-        </Dialog>
+                </DialogContent>
+            </Dialog>
+
+            <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Khata Entry?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This will permanently delete this khata entry and all its payment history.
+                            This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
+            <AlertDialog open={showPaymentDeleteAlert} onOpenChange={setShowPaymentDeleteAlert}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Payment?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This will remove the payment of {selectedPayment && formatAmount(selectedPayment.amount)}
+                            made on {selectedPayment && formatDateTime(selectedPayment.date)}.
+                            This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDeletePayment}>Delete</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
     );
 };
 
