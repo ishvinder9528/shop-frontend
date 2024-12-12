@@ -8,6 +8,9 @@ import { UserContext } from '../../../context/userContext';
 import { updateUser } from '@/services/userService';
 import { useToast } from "@/hooks/use-toast";
 import axios from 'axios';
+import Loading from '../Loading';
+import { LiaSpinnerSolid } from "react-icons/lia";
+
 const Profile = () => {
     const { user, setUser } = useContext(UserContext);
     const [formData, setFormData] = useState({
@@ -66,7 +69,6 @@ useEffect(() => {
       toast({
         title: "Success",
         description: "Profile updated successfully",
-        variant: "success",
       });
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -104,7 +106,7 @@ useEffect(() => {
                 >
                   <AvatarImage src={url} alt={`Avatar option ${index + 1}`} />
                   <AvatarFallback className="bg-primary text-primary-foreground">
-                      {getInitials(user?.name)}
+                     <LiaSpinnerSolid className="animate-spin" />
                     </AvatarFallback>
                 </Avatar>
               ))}
@@ -113,7 +115,8 @@ useEffect(() => {
               <Avatar className="w-24 h-24">
                 <AvatarImage src={formData.picture} alt="Selected avatar" />
                 <AvatarFallback className="bg-primary text-primary-foreground">
-                      {getInitials(user?.name)}
+                      {/* {getInitials(user?.name)} */}
+                    <LiaSpinnerSolid className="animate-spin" />
                     </AvatarFallback>
               </Avatar>
             </div>
