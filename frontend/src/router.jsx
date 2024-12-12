@@ -6,6 +6,8 @@ import Login from "./components/common/auth/Login";
 import Register from "./components/common/auth/Register";
 import Ledger from "./components/ledger/Ledger";
 import Khata from "./components/khata/Khata";
+import Profile from "./components/common/profile/Profile";
+
 const Router = createBrowserRouter([
     {
         path: '/',
@@ -34,6 +36,10 @@ const Router = createBrowserRouter([
             {
                 path: 'khata',
                 element: <Khata />
+            },
+            {
+                path: 'profile',
+                element: <Profile />
             }
         ],
     },

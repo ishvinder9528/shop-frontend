@@ -147,6 +147,7 @@ const Header = () => {
                   </Avatar>
                 </PopoverTrigger>
                 <PopoverContent>
+                  <h2 className="cursor-pointer" onClick={() => navigate('/profile')}>Profile</h2>
                   <h2
                     className='cursor-pointer'
                     onClick={() => {
@@ -183,6 +184,7 @@ const Header = () => {
                   <DropdownMenuItem onClick={() => navigate('/')}>Shops</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate('/ledger')}>Ledger</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate('/khata')}>Khata</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/profile')}>Profile</DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
                       googleLogout();
