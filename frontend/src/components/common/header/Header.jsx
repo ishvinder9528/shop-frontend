@@ -26,6 +26,11 @@ import { Avatar, AvatarImage, AvatarFallback } from '../../ui/avatar';
 import { UserContext } from '../../../context/userContext'
 import { useNavigate } from "react-router";
 import { createOrUpdateUser } from '../../../services/userService';
+import { FaRegUser } from "react-icons/fa6";
+import { RiShoppingBagLine } from "react-icons/ri";
+import { RiBookletLine } from "react-icons/ri";
+import { MdOutlineAccountBalanceWallet } from "react-icons/md";
+import { LuLogOut } from "react-icons/lu";
 
 const Header = () => {
   const navigate = useNavigate()
@@ -70,7 +75,7 @@ const Header = () => {
 
       // Create or update user in our database
       await createOrUpdateUser(userData);
-      
+
       localStorage.setItem("user", JSON.stringify(userData));
       setOpenDailog(false);
       setUser(userData);
@@ -93,31 +98,31 @@ const Header = () => {
   return (
     <div className="p-3 shadow-sm flex justify-between items-center px-5">
       <div className="flex items-center space-x-6">
-        <img 
-          src="/logo.svg" 
-          alt="icon logo" 
-          className="hover:cursor-pointer h-[40px] w-auto" 
+        <img
+          src="/logo.svg"
+          alt="icon logo"
+          className="hover:cursor-pointer h-[40px] w-auto"
           onClick={() => navigate('/')}
         />
         {user && (
           <nav className="hidden md:flex space-x-4">
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate('/')}
+            <Button
+              variant="ghost"
+              onClick={() => navigate('/create-shop')}
             >
-              Shops
+              <RiShoppingBagLine /> Shops
             </Button>
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               onClick={() => navigate('/ledger')}
             >
-              Ledger
+              <RiBookletLine /> Ledger
             </Button>
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               onClick={() => navigate('/khata')}
             >
-              Khata
+              <MdOutlineAccountBalanceWallet /> Khata
             </Button>
           </nav>
         )}
@@ -128,16 +133,16 @@ const Header = () => {
           <>
             {/* Buttons for large screens */}
             <div className='hidden sm:flex gap-5 items-center'>
-              
+
               <div className="flex items-center gap-2">
                 <p className="text-sm text-gray-500">{user?.email}</p>
               </div>
 
-              <Popover>
-                <PopoverTrigger>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
                   <Avatar className="h-[35px] w-[35px]">
-                    <AvatarImage 
-                      src={user?.picture} 
+                    <AvatarImage
+                      src={user?.picture}
                       alt={user?.name}
                       onError={() => setImageError(true)}
                     />
@@ -145,11 +150,10 @@ const Header = () => {
                       {getInitials(user?.name)}
                     </AvatarFallback>
                   </Avatar>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <h2 className="cursor-pointer" onClick={() => navigate('/profile')}>Profile</h2>
-                  <h2
-                    className='cursor-pointer'
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-[100px]">
+                  <DropdownMenuItem onClick={() => navigate('/profile')}><FaRegUser /> Profile</DropdownMenuItem>
+                  <DropdownMenuItem
                     onClick={() => {
                       googleLogout();
                       localStorage.clear();
@@ -157,10 +161,10 @@ const Header = () => {
                       navigate('/');
                     }}
                   >
-                    Logout
-                  </h2>
-                </PopoverContent>
-              </Popover>
+                    <LuLogOut /> Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
 
             {/* Dropdown for small screens */}
@@ -169,8 +173,8 @@ const Header = () => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon">
                     <Avatar className="h-[35px] w-[35px]">
-                      <AvatarImage 
-                        src={user?.picture} 
+                      <AvatarImage
+                        src={user?.picture}
                         alt={user?.name}
                         onError={() => setImageError(true)}
                       />
@@ -180,11 +184,37 @@ const Header = () => {
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => navigate('/')}>Shops</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate('/ledger')}>Ledger</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate('/khata')}>Khata</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate('/profile')}>Profile</DropdownMenuItem>
+                <DropdownMenuContent align="end" className="w-[150px]">
+                  <DropdownMenuItem onClick={() => navigate('/profile')}>
+                    <span className="flex items-center gap-2">
+                    <FaRegUser /> Profile
+                    </span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span className="flex flex-col">
+                      <span className="text-gray-500 text-sm mb-1">Apps</span>
+                      <div className="flex flex-col space-y-1 ml-4">
+                        <span
+                          className="cursor-pointer flex items-center gap-2"
+                          onClick={() => navigate('/create-shop')}
+                        >
+                          <RiShoppingBagLine />  Shops
+                        </span>
+                        <span
+                          className="cursor-pointer flex items-center gap-2"
+                          onClick={() => navigate('/ledger')}
+                        >
+                          <RiBookletLine /> Ledger
+                        </span>
+                        <span
+                          className="cursor-pointer flex items-center gap-2"
+                          onClick={() => navigate('/khata')}
+                        >
+                         <MdOutlineAccountBalanceWallet /> Khata
+                        </span>
+                      </div>
+                    </span>
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
                       googleLogout();
@@ -193,11 +223,14 @@ const Header = () => {
                       navigate('/');
                     }}
                   >
-                    Logout
+                    <span className="flex items-center gap-2">
+                    <LuLogOut /> Logout
+                    </span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
+
           </>
         ) : (
           <Button onClick={() => navigate('/login')}>Sign In</Button>
