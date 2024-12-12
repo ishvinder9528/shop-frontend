@@ -14,7 +14,7 @@ export const CreateUserService = async (userData) => {
     try {
         // Remove _id if it exists in userData
         const { _id, ...userDataWithoutId } = userData;
-        
+        console.log("userDataWithoutId", userDataWithoutId)
         // Ensure required fields are present
         if (!userDataWithoutId.name || !userDataWithoutId.email || !userDataWithoutId.googleId) {
             throw new Error('Missing required fields: name, email, or googleId');
@@ -42,7 +42,8 @@ export const CreateUserService = async (userData) => {
                 picture: userDataWithoutId.picture,
                 given_name: userDataWithoutId.given_name,
                 family_name: userDataWithoutId.family_name,
-                verified_email: userDataWithoutId.verified_email
+                verified_email: userDataWithoutId.verified_email,
+                token: userDataWithoutId.token
             };
             
             user = new User(newUserData);

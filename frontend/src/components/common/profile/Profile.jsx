@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserContext } from '../../../context/userContext';
 import { updateUser } from '@/services/userService';
 import { useToast } from "@/hooks/use-toast";
-
+import axios from 'axios';
 const Profile = () => {
     const { user, setUser } = useContext(UserContext);
     const [formData, setFormData] = useState({
@@ -15,10 +15,38 @@ const Profile = () => {
         email: user.email,
         picture: user.picture || avatarUrls[0],
     });
+    const [googleUser, setGoogleUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const { toast } = useToast();
     
+    
+useEffect(() => {
+    getUserProfile();
+}, []);
+
+  const getUserProfile = async () => {
+    try {
+      const response = await axios.get(
+        `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${user.token}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${user._token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      console.log("response", response.data)
+      setGoogleUser(response.data)
+      console.log("picture", googleUser?.picture);
+      
+      
+    } catch (error) {
+      console.error("Error in user profile:", error);
+    }
+  };
+
     const avatarUrls = [
-        user?.picture,
+        googleUser?.picture,
         "https://avatar.iran.liara.run/public/16",
         "https://avatar.iran.liara.run/public/43",
         "https://avatar.iran.liara.run/public/17",
@@ -50,6 +78,15 @@ const Profile = () => {
     }
   };
 
+  const getInitials = (name) => {
+    if (!name) return '?';
+    return name.split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
       <Card className="md:w-[550px]">
@@ -66,14 +103,18 @@ const Profile = () => {
                   onClick={() => setFormData({ ...formData, picture: url })}
                 >
                   <AvatarImage src={url} alt={`Avatar option ${index + 1}`} />
-                  <AvatarFallback>Avatar</AvatarFallback>
+                  <AvatarFallback className="bg-primary text-primary-foreground">
+                      {getInitials(user?.name)}
+                    </AvatarFallback>
                 </Avatar>
               ))}
             </div>
             <div className="flex justify-center mb-6">
               <Avatar className="w-24 h-24">
                 <AvatarImage src={formData.picture} alt="Selected avatar" />
-                <AvatarFallback>Avatar</AvatarFallback>
+                <AvatarFallback className="bg-primary text-primary-foreground">
+                      {getInitials(user?.name)}
+                    </AvatarFallback>
               </Avatar>
             </div>
             <div className="grid w-full items-center gap-4">

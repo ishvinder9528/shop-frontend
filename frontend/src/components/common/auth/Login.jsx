@@ -33,6 +33,8 @@ const Login = () => {
                             'Content-Type': 'application/json'
                         }
                     }
+                    
+                    
                 );
 
                 const googleData = response.data;
@@ -43,7 +45,8 @@ const Login = () => {
                     googleId: googleData.id,
                     given_name: googleData.given_name,
                     family_name: googleData.family_name,
-                    verified_email: googleData.verified_email
+                    verified_email: googleData.verified_email,
+                    token: credResponse.access_token
                 };
 
                 const user = await createOrUpdateUser(userData);
