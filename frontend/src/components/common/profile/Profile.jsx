@@ -24,7 +24,7 @@ const Profile = () => {
     
     
 useEffect(() => {
-    getUserProfile();
+    // getUserProfile(); //comment for now
 }, []);
 
   const getUserProfile = async () => {
@@ -49,7 +49,7 @@ useEffect(() => {
   };
 
     const avatarUrls = [
-        googleUser?.picture,
+        // googleUser?.picture,
         "https://avatar.iran.liara.run/public/16",
         "https://avatar.iran.liara.run/public/43",
         "https://avatar.iran.liara.run/public/17",

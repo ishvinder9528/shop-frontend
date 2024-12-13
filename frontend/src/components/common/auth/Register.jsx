@@ -15,9 +15,20 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle registration logic here
+        const userData = {
+            name,
+            email,
+            password
+        };
+        await createOrUpdateUser(userData).then((resposne) => {
+            navigate('/');
+        }).catch((error) => {
+            console.error("Error in registration:", error);
+            alert('Failed to register. Please try again.');
+        });
+
         console.log('Registration submitted', { name, email, password });
     };
 
@@ -38,7 +49,8 @@ const Register = () => {
                     ...response.data,
                     googleId: response.data.id
                 };
-
+                console.log("userData by google: ",userData);
+                
                 await createOrUpdateUser(userData);
                 localStorage.setItem("user", JSON.stringify(userData));
                 navigate('/');
@@ -68,34 +80,34 @@ const Register = () => {
                         <div className="grid w-full items-center gap-4">
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="name">Name</Label>
-                                <Input 
-                                    id="name" 
-                                    placeholder="Enter your name" 
+                                <Input
+                                    id="name"
+                                    placeholder="Enter your name"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    required 
+                                    required
                                 />
                             </div>
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="email">Email</Label>
-                                <Input 
-                                    id="email" 
-                                    placeholder="Enter your email" 
+                                <Input
+                                    id="email"
+                                    placeholder="Enter your email"
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    required 
+                                    required
                                 />
                             </div>
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="password">Password</Label>
-                                <Input 
-                                    id="password" 
-                                    placeholder="Create a password" 
+                                <Input
+                                    id="password"
+                                    placeholder="Create a password"
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    required 
+                                    required
                                 />
                             </div>
                         </div>

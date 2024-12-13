@@ -16,24 +16,20 @@ export const CreateUserService = async (userData) => {
         const { _id, ...userDataWithoutId } = userData;
         console.log("userDataWithoutId", userDataWithoutId)
         // Ensure required fields are present
-        if (!userDataWithoutId.name || !userDataWithoutId.email || !userDataWithoutId.googleId) {
-            throw new Error('Missing required fields: name, email, or googleId');
+        if (!userDataWithoutId.name || !userDataWithoutId.email) {
+            throw new Error('Missing required fields: name, email');
         }
-
+        let user = ''
         // Check if user exists by googleId
-        let user = await User.findOne({ googleId: userDataWithoutId.googleId });
-        
-        if (user) {
+        let googleUser = await User.findOne({ googleId: userDataWithoutId.googleId });
+        let emailUser = await User.findOne({ email: userDataWithoutId.email });
+        if (googleUser) {
             // Update existing user
-            user = await User.findOneAndUpdate(
-                { googleId: userDataWithoutId.googleId },
-                { 
-                    ...userDataWithoutId,
-                    lastLogin: new Date()
-                },
-                { new: true }
-            );
-        } else {
+            user = googleUser;
+        } else if (emailUser) {
+            // Update existing user
+            throw new Error('User already exists with this email');
+        } else if (userDataWithoutId.googleId) {
             // Create new user
             const newUserData = {
                 name: userDataWithoutId.name,
@@ -45,14 +41,27 @@ export const CreateUserService = async (userData) => {
                 verified_email: userDataWithoutId.verified_email,
                 token: userDataWithoutId.token
             };
-            
+
+            user = new User(newUserData);
+            await user.save();
+        } else {
+            const newUserData = {
+                name: userDataWithoutId.name,
+                email: userDataWithoutId.email,
+                googleId: null,
+                picture: 'https://avatar.iran.liara.run/public/16',
+                given_name: userDataWithoutId.given_name,
+                family_name: userDataWithoutId.family_name,
+                verified_email: false,
+                token: userDataWithoutId.token ?? null
+            }
             user = new User(newUserData);
             await user.save();
         }
 
         // Generate token
         const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
-        
+
         return { user, token };
     } catch (error) {
         console.error('CreateUserService error:', error);
@@ -82,7 +91,7 @@ export const DeleteUserService = async (googleId) => {
     } catch (error) {
         throw new Error(`Error deleting user: ${error.message}`);
     }
-}; 
+};
 
 // ... existing imports ...
 

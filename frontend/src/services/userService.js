@@ -4,6 +4,8 @@ const API_URL = import.meta.env.VITE_HOST;
 
 export const createOrUpdateUser = async (userData) => {
     try {
+        console.log("userData by google service: ",userData);
+        
         const { _id, ...userDataWithoutId } = userData;
         
         console.log('Sending user data to backend:', userDataWithoutId);
@@ -13,6 +15,7 @@ export const createOrUpdateUser = async (userData) => {
         
         // Store token
         localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
         
         return user;
     } catch (error) {
