@@ -24,6 +24,20 @@ export const createOrUpdateUser = async (userData) => {
     }
 };
 
+export const loginUser = async (userData) => {
+    try {
+        const response = await axios.post(`${API_URL}/users/login`, userData);
+        console.log("response",response);
+        const { user, token } = response.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        return response.data;
+    } catch (error) {
+        console.error("Error logging in:", error.response?.data || error);
+        throw error;
+    }
+};
+
 // Add axios interceptor to include token in all requests
 axios.interceptors.request.use(
     (config) => {

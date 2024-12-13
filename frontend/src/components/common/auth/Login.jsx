@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { FcGoogle } from 'react-icons/fc';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
-import { createOrUpdateUser } from '@/services/userService';
+import { createOrUpdateUser,loginUser } from '@/services/userService';
 import { UserContext } from '../../../context/userContext';
 import axios from 'axios';
 
@@ -20,7 +20,8 @@ const Login = () => {
         e.preventDefault();
         // Handle login logic here
         console.log('Login submitted', { email, password });
-    };
+        loginUser({ email, password });
+    }
 
     const googleLogin = useGoogleLogin({
         onSuccess: async (credResponse) => {

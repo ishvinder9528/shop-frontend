@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
         unique: true, 
         trim: true 
     },
+    password: { 
+        type: String, 
+        required: false 
+    },
     picture: { 
         type: String, 
         required: false 
@@ -65,6 +69,10 @@ userSchema.set('toJSON', {
         return ret;
     }
 });
+
+userSchema.methods.comparePassword = async function(password) {
+    return password === this.password;
+};
 
 const User = mongoose.model('User', userSchema);
 export default User; 

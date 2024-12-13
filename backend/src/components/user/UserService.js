@@ -48,6 +48,7 @@ export const CreateUserService = async (userData) => {
             const newUserData = {
                 name: userDataWithoutId.name,
                 email: userDataWithoutId.email,
+                password: userDataWithoutId.password,
                 googleId: null,
                 picture: 'https://avatar.iran.liara.run/public/16',
                 given_name: userDataWithoutId.given_name,
@@ -114,8 +115,8 @@ export const LoginUserService = async (email, password) => {
         // Update last login
         user.lastLogin = new Date();
         await user.save();
-
-        return user;
+        const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
+        return { user, token };
     } catch (error) {
         throw new Error(`Login failed: ${error.message}`);
     }
